@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\pigisland",
+    "\\pigisland\\src",
+    "\\pigisland\\src\\kmint",
+    "\\pigisland\\src\\kmint\\pigisland",
+    "\\pigisland\\src\\kmint\\pigisland\\algorithms",
+    "\\pigisland\\src\\kmint\\pigisland\\algorithms\\finitestate",
+    "\\pigisland\\src\\kmint\\pigisland\\algorithms\\finitestate\\boat",
+    "\\pigisland\\src\\kmint\\pigisland\\algorithms\\finitestate\\shark",
+    "\\pigisland\\src\\kmint\\pigisland\\entities"
+  ],
+  "PreviewInSolutionExplorer": false
+}
