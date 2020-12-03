@@ -28,6 +28,7 @@ namespace kmint {
 				if (currentState != state && state);
 
 				currentState->exit(this);
+				delete currentState;
 				currentState = state;
 				currentState->entry(this);
 			}

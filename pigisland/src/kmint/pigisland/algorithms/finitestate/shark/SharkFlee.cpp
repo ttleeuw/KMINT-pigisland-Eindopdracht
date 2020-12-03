@@ -8,7 +8,12 @@ namespace kmint {
             void SharkFlee::exit(shark* entity) { entity->removeTint(); };
 
             void SharkFlee::execute(shark* entity) {
-                // TODO
+                int next_index = random_int(0, entity->node().num_edges());
+                entity->node(entity->node()[next_index].to());
+                steps++;
+                if (steps == MAX_STEPS) {
+                    entity->changeState(new SharkWander);
+                }
             };
 
             std::string SharkFlee::getState() { return "SharkFlee"; };

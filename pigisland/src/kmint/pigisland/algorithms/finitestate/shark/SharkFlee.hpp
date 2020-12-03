@@ -5,11 +5,15 @@
 #include "kmint/random.hpp"
 #include "kmint/primitives.hpp"
 
+#define MAX_STEPS 10
+
 namespace kmint {
     namespace pigisland {
         namespace finitestate {
             class SharkFlee : public SharkState
             {
+            private:
+                int steps = 0;
             public:
                 virtual ~SharkFlee() {}
 

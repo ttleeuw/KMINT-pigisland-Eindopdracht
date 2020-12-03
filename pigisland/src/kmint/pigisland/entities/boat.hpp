@@ -4,6 +4,8 @@
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
+#include "kmint/pigisland/algorithms/finitestate/boat/BoatState.hpp"
+#include "kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.hpp"
 
 namespace kmint {
 	namespace pigisland {
@@ -18,7 +20,25 @@ namespace kmint {
 			// geeft de lengte van een zijde van de collision box van deze actor terug.
 			// Belangrijk voor collision detection
 			scalar collision_range() const override { return 16.0; }
+
+			void setTint(kmint::graphics::color tint) { this->drawable_.set_tint(tint); }
+			void removeTint() { this->drawable_.remove_tint(); }
+
+			void changeState(finitestate::BoatState* state) {
+				if (currentState != state && state);
+
+				currentState->exit(this);
+				delete currentState;
+				currentState = state;
+				currentState->entry(this);
+			}
+
+			std::size_t getPaintDamage() { return paintDamge; }
 		private:
+			finitestate::BoatState* currentState;
+			finitestate::BoatGlobalState* globalState;
+
+			std::size_t paintDamge = 0;
 			// hoeveel tijd is verstreken sinds de laatste beweging
 			delta_time t_passed_{};
 			// weet hoe de koe getekend moet worden

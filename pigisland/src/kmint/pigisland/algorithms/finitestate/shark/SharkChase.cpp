@@ -12,13 +12,15 @@ namespace kmint {
                 for (std::size_t i = 0; i < entity->num_perceived_actors(); ++i) {
                     auto& a = entity->perceived_actor(i);
                     
-                    map::map_node* node = &entity->getGraph()[0];
-                    std::for_each(entity->getGraph().begin(), entity->getGraph().end(), [&](map::map_node& n) {
-                        if (math::distance(n.location(), a.location()) < math::distance(node->location(), a.location())) node = &n;
-                    });
-                    pathFinder.search(entity->node().node_id(), node->node_id(), astar.get());
-                    this->path = astar->getShortestPath();
-                    return;
+                    if (!a.removed()) {
+                        map::map_node* node = &entity->getGraph()[0];
+                        std::for_each(entity->getGraph().begin(), entity->getGraph().end(), [&](map::map_node& n) {
+                            if (math::distance(n.location(), a.location()) < math::distance(node->location(), a.location())) node = &n;
+                            });
+                        pathFinder.search(entity->node().node_id(), node->node_id(), astar.get());
+                        this->path = astar->getShortestPath();
+                        return;
+                    }
                 }
             };
 
@@ -34,11 +36,10 @@ namespace kmint {
                             break;
                         }
                     }
-
                     for (std::size_t i = 0; i < entity->num_colliding_actors(); ++i)
                     {
+                        // TODO remove if pig
                         auto& a = entity->colliding_actor(i);
-                        // TODO remove
                         a.remove();
                     }
                 }
