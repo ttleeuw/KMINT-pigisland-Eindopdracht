@@ -3,3 +3,5 @@
 build/
 .cquery_cached_index/
 \#*
+.vs
+./.vs
