@@ -1,21 +1,18 @@
 #pragma once
 #include <string>
-#include "SharkTired.hpp"
-
-#define STEPS_REQUIRED_TIRED 100
+#include "kmint/pigisland/algorithms/finitestate/shark/SharkTired.hpp"
+#include "kmint/pigisland/algorithms/finitestate/IGlobalState.hpp"
 
 namespace kmint {
     namespace pigisland {
         class shark;
 
         namespace finitestate {
-            class SharkGlobalState
+            class SharkGlobalState : public IGlobalState<shark>
             {
             public:
-                virtual ~SharkGlobalState() {}
-
-                virtual void execute(shark* entity);
-                virtual std::string getState();
+                void execute(shark* entity) override;
+                std::string toString() override;
             };
         }
     }

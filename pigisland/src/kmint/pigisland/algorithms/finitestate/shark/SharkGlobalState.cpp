@@ -5,9 +5,9 @@ namespace kmint {
     namespace pigisland {
         namespace finitestate {
             void SharkGlobalState::execute(shark* entity) {
-                if (entity->getSteps() == STEPS_REQUIRED_TIRED) 
+                if (entity->getSteps() == STEPS_REQUIRED)
                 {
-                    entity->changeState(new SharkTired);
+                    entity->getStateMachine().changeState(new SharkTired, entity);
                 }
                 else 
                 {
@@ -15,7 +15,7 @@ namespace kmint {
                 }
             }
 
-            std::string SharkGlobalState::getState() { return "SharkGlobalState"; }
+            std::string SharkGlobalState::toString() { return "SharkGlobalState"; }
         }
     }
 }

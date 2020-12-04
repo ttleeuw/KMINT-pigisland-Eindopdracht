@@ -12,11 +12,11 @@ namespace kmint {
                 entity->node(entity->node()[next_index].to());
                 steps++;
                 if (steps == MAX_STEPS) {
-                    entity->changeState(new SharkWander);
+                    entity->getStateMachine().changeState(new SharkWander, entity);
                 }
             };
 
-            std::string SharkFlee::getState() { return "SharkFlee"; };
+            std::string SharkFlee::toString() { return "SharkFlee"; };
         }
     }
 }

@@ -4,7 +4,8 @@
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
-#include "kmint/pigisland/algorithms/finitestate/boat/BoatState.hpp"
+#include "kmint/pigisland/algorithms/finitestate/StateMachine.hpp"
+#include "kmint/pigisland/algorithms/finitestate/boat/BoatWander.hpp"
 #include "kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.hpp"
 
 namespace kmint {
@@ -24,19 +25,13 @@ namespace kmint {
 			void setTint(kmint::graphics::color tint) { this->drawable_.set_tint(tint); }
 			void removeTint() { this->drawable_.remove_tint(); }
 
-			void changeState(finitestate::BoatState* state) {
-				if (currentState != state && state);
-
-				currentState->exit(this);
-				delete currentState;
-				currentState = state;
-				currentState->entry(this);
-			}
-
+			finitestate::StateMachine<boat> getStateMachine() const { return this->stateMachine; }
+			map::map_graph& getGraph() { return graph; }
 			std::size_t getPaintDamage() { return paintDamge; }
 		private:
-			finitestate::BoatState* currentState;
-			finitestate::BoatGlobalState* globalState;
+			finitestate::StateMachine<boat> stateMachine;
+
+			map::map_graph& graph;
 
 			std::size_t paintDamge = 0;
 			// hoeveel tijd is verstreken sinds de laatste beweging

@@ -5,17 +5,18 @@
 namespace kmint {
     namespace pigisland {
         boat::boat(map::map_graph& g, map::map_node& initial_node)
-            : play::map_bound_actor{ initial_node }, drawable_{ *this, graphics::image{boat_image()} } 
+            : play::map_bound_actor{ initial_node }, graph(g), drawable_{ *this, graphics::image{boat_image()} } 
         {
+            this->stateMachine.setCurrentState(new finitestate::BoatWander, this);
+            this->stateMachine.setGlobalState(new finitestate::BoatGlobalState);
         }
 
 
         void boat::act(delta_time dt) {
             t_passed_ += dt;
             if (to_seconds(t_passed_) >= 1) {
-                // pick random edge
-                int next_index = random_int(0, node().num_edges());
-                this->node(node()[next_index].to());
+                this->stateMachine.update(this);
+
                 t_passed_ = from_seconds(0);
             }
         }
