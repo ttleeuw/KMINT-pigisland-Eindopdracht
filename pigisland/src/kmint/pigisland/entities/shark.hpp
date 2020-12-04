@@ -4,8 +4,7 @@
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
-#include "kmint/pigisland/algorithms/finitestate/shark/SharkState.hpp"
-#include "kmint/pigisland/algorithms/finitestate/shark/SharkGlobalState.hpp"
+#include "kmint/pigisland/algorithms/finitestate/StateMachine.hpp"
 
 namespace kmint {
 	namespace pigisland {
@@ -24,15 +23,6 @@ namespace kmint {
 			// geeft het bereik aan waarbinnen een haai andere actors kan waarnemen.
 			scalar perception_range() const override { return 200.f; }
 
-			void changeState(finitestate::SharkState* state) {
-				if (currentState != state && state);
-
-				currentState->exit(this);
-				delete currentState;
-				currentState = state;
-				currentState->entry(this);
-			}
-
 			void setTint(kmint::graphics::color tint) { this->drawable_.set_tint(tint); }
 			void removeTint() { this->drawable_.remove_tint(); }
 
@@ -40,11 +30,12 @@ namespace kmint {
 			map::map_node& getInitialNode() { return initial; }
 			std::size_t getSteps() { return steps; }
 			void increaseSteps() { steps++; }
+
+			finitestate::StateMachine<shark>& getStateMachine() { return this->stateMachine; }
 		private:
 			std::size_t steps = 0;
 
-			finitestate::SharkState* currentState;
-			finitestate::SharkGlobalState* globalState;
+			finitestate::StateMachine<shark> stateMachine;
 			// hoeveel tijd is verstreken sinds de laatste beweging
 			delta_time t_passed_{};
 

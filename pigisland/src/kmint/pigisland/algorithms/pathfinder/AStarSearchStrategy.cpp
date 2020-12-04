@@ -1,7 +1,7 @@
 #include "AStarSearchStrategy.hpp"
 
 namespace searchStrategy {
-    AStarSearchStrategy::AStarSearchStrategy(kmint::map::map_graph& graph) : ISearchStrategy(graph) { }
+    AStarSearchStrategy::AStarSearchStrategy(mGraph& graph) : ISearchStrategy(graph) { }
 
     void AStarSearchStrategy::search(int source, int target)
     {
@@ -11,11 +11,11 @@ namespace searchStrategy {
         searchAStar();
     }
 
-    std::vector <const kmint::graph::basic_edge<kmint::map::map_node_info>*> AStarSearchStrategy::getVisited() const { return _shortestPathTree; }
+    std::vector <const edge*> AStarSearchStrategy::getVisited() const { return _shortestPathTree; }
     std::queue<int> AStarSearchStrategy::getShortestPath() const { return shortestPath; }
     double AStarSearchStrategy::getCost() const { return _realCosts[_target]; }
 
-    double AStarSearchStrategy::calculateHeuristicCosts(const kmint::graph::basic_edge<kmint::map::map_node_info>* edge, int target) {
+    double AStarSearchStrategy::calculateHeuristicCosts(const edge* edge, int target) {
         auto dx = edge->to().location().x() - _graph[target].location().x();
         auto dy = edge->to().location().y() - _graph[target].location().y();
         auto costs = sqrt((double)dx * dx + (double)dy * dy);
@@ -61,7 +61,7 @@ namespace searchStrategy {
         }
 
         std::queue<int> path;
-        //just return an empty path if no target or no path found
+
         if (_target < 0) {
             shortestPath = path;
             return;
@@ -94,8 +94,8 @@ namespace searchStrategy {
     void AStarSearchStrategy::initSearch() {
         _realCosts = std::vector<double>(_graph.num_nodes(), 0.0);
         _estimatedCosts = std::vector<double>(_graph.num_nodes(), 0.0);
-        _shortestPathTree = std::vector<const kmint::graph::basic_edge<kmint::map::map_node_info>*>(_graph.num_nodes());
-        _searchFrontier = std::vector<const kmint::graph::basic_edge<kmint::map::map_node_info>*>(_graph.num_nodes());
+        _shortestPathTree = std::vector<const edge*>(_graph.num_nodes());
+        _searchFrontier = std::vector<const edge*>(_graph.num_nodes());
         _graph.untag_all();
     }
 }

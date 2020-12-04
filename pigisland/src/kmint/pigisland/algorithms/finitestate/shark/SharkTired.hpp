@@ -1,17 +1,18 @@
 #pragma once
 #include <queue>
 
-#include "SharkState.hpp"
 #include "kmint/random.hpp"
 #include "kmint/primitives.hpp"
-
+#include "kmint/pigisland/algorithms/finitestate/IState.hpp"
 #include "kmint/pigisland/algorithms/pathfinder/PathFinder.hpp"
 #include "kmint/pigisland/algorithms/pathfinder/AStarSearchStrategy.hpp"
 
 namespace kmint {
     namespace pigisland {
+        class shark;
+
         namespace finitestate {
-            class SharkTired : public SharkState
+            class SharkTired : public IState<shark>
             {
             public:
                 virtual ~SharkTired() {}
@@ -20,7 +21,7 @@ namespace kmint {
                 void execute(shark* entity) override;
                 void exit(shark* entity) override;
 
-                std::string getState() override;
+                std::string toString() override;
             private:
                 std::queue<int> path;
 

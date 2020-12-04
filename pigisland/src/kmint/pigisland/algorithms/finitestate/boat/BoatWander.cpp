@@ -12,7 +12,7 @@ namespace kmint {
                 entity->node(entity->node()[next_index].to());
             };
 
-            std::string BoatWander::getState() { return "SharkWander"; };
+            std::string BoatWander::toString() { return "BoatWander"; };
         }
     }
 }

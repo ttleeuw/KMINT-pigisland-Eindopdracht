@@ -1,5 +1,6 @@
 #include "SharkWander.hpp"
 #include "kmint/pigisland/entities/shark.hpp"
+#include "kmint/pigisland/algorithms/node_algorithm.hpp"
 
 namespace kmint {
     namespace pigisland {
@@ -15,7 +16,7 @@ namespace kmint {
                     // TODO check boat or pig
                     // pig;
                     if (!a.removed()) {
-                        entity->changeState(new SharkChase);
+                        entity->getStateMachine().changeState(new SharkChase, entity);
                         return;
                     }    
                     // boat;
@@ -29,7 +30,7 @@ namespace kmint {
                 entity->node(entity->node()[next_index].to());
             };
 
-            std::string SharkWander::getState() { return "SharkWander"; };
+            std::string SharkWander::toString() { return "SharkWander"; };
         }
     }
 }

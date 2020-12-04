@@ -44,7 +44,7 @@ namespace kmint {
                     }
                 }
                 else {
-                    entity->changeState(new SharkWander);
+                    entity->getStateMachine().changeState(new SharkWander, entity);
                 }
             };
 
@@ -53,7 +53,7 @@ namespace kmint {
                 entity->removeTint();
             };
 
-            std::string SharkChase::getState() { return "SharkChase"; };
+            std::string SharkChase::toString() { return "SharkChase"; };
         }
     }
 }

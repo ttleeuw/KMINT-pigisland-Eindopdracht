@@ -6,13 +6,13 @@ namespace kmint {
         namespace finitestate {
             void BoatGlobalState::execute(boat* entity) {
                 // TODO
-                if (entity->getPaintDamage() >= MAX_PAINT_DAMAGE)
+                if (entity->getPaintDamage() >= STEPS_REQUIRED)
                 {
-                    entity->changeState(new BoatRepair);
+                    entity->getStateMachine().changeState(new BoatRepair, entity);
                 }
             };
 
-            std::string BoatGlobalState::getState() { return "SharkWander"; };
+            std::string BoatGlobalState::toString() { return "SharkWander"; };
         }
     }
 }

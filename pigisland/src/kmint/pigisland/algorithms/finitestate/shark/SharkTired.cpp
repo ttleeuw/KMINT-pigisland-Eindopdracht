@@ -27,7 +27,7 @@ namespace kmint {
 
             void SharkTired::exit(shark* entity) {  entity->removeTint(); };
 
-            std::string SharkTired::getState() { return "SharkReturn"; };
+            std::string SharkTired::toString() { return "SharkReturn"; };
         }
     }
 }

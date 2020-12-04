@@ -1,16 +1,17 @@
 #pragma once
-#include "SharkState.hpp"
-#include "SharkWander.hpp"
-#include "SharkTired.hpp"
 #include "kmint/random.hpp"
 #include "kmint/primitives.hpp"
+#include "kmint/pigisland/algorithms/finitestate/IState.hpp"
+#include "kmint/pigisland/algorithms/finitestate/shark/SharkTired.hpp"
+#include "kmint/pigisland/algorithms/finitestate/shark/SharkWander.hpp"
 
 #define MAX_STEPS 10
 
 namespace kmint {
     namespace pigisland {
+        class shark;
         namespace finitestate {
-            class SharkFlee : public SharkState
+            class SharkFlee : public IState<shark>
             {
             private:
                 int steps = 0;
@@ -21,7 +22,7 @@ namespace kmint {
                 void execute(shark* entity) override;
                 void exit(shark* entity) override;
 
-                std::string getState() override;
+                std::string toString() override;
             };
         }
     }
