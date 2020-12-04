@@ -3,3 +3,7 @@
 build/
 .cquery_cached_index/
 \#*
+
+.vs/KMINT-pigisland-Eindopdracht/v16/
+
+.vs/
