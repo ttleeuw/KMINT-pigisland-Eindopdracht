@@ -38,7 +38,7 @@ namespace kmint {
                     for (size_t i = 0; i < entity->node().num_edges(); i++)
                     {
                         if (entity->node()[i].to().node_id() == next) {
-                            entity->node(entity->node()[i].to());
+                            entity->moveTo(entity->node()[i]);
                             break;
                         }
                     }

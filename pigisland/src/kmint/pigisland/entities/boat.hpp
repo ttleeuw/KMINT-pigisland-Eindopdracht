@@ -34,6 +34,7 @@ namespace kmint {
 
 			bool getCanMove() { return canMove; };
 			void moveRandomly();
+			void moveTo(map::map_edge edge);
 			bool waitIfNecessary();
 		private:
 			finitestate::StateMachine<boat> stateMachine;

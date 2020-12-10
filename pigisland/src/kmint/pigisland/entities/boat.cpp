@@ -13,7 +13,7 @@ namespace kmint {
 
 
         void boat::act(delta_time dt) {
-            t_passed_ += dt * 10;
+            t_passed_ += dt;
             if (to_seconds(t_passed_) >= 1) {
                 this->stateMachine.update(this);
 
@@ -27,8 +27,15 @@ namespace kmint {
             if (canMove) {
                 int next_index = random_int(0, this->node().num_edges());
                 waitTimer = this->node()[next_index].weight() - 1;
+                std::cout << "Weight: " << this->node()[next_index].weight() << std::endl;
                 this->node(this->node()[next_index].to());
             }
+        }
+
+        void boat::moveTo(map::map_edge edge)
+        {
+            waitTimer = edge.weight() - 1;
+            this->node(edge.to());
         }
 
         bool boat::waitIfNecessary()
