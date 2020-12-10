@@ -35,7 +35,7 @@ namespace kmint {
 
             void BoatRepair::execute(boat* entity) {
                 // TODO; Check should flee
-                if (!path.empty()) {
+                if (!path.empty() && entity->waitIfNecessary()) {
                     auto next = path.front();
                     path.pop();
                     for (size_t i = 0; i < entity->node().num_edges(); i++)
