@@ -11,7 +11,6 @@ namespace kmint {
             {
             public:
                 virtual void execute(T* entity) = 0;
-                virtual std::string toString() = 0;
             };
         }
     }

@@ -14,8 +14,6 @@ namespace kmint {
                     entity->increaseSteps();
                 }
             }
-
-            std::string SharkGlobalState::toString() { return "SharkGlobalState"; }
         }
     }
 }

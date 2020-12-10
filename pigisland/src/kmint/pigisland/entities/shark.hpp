@@ -28,16 +28,20 @@ namespace kmint {
 
 			map::map_graph& getGraph() { return graph; }
 			map::map_node& getInitialNode() { return initial; }
-			std::size_t getSteps() { return steps; }
+			std::size_t getSteps() const { return steps; }
 			void increaseSteps() { steps++; }
 
 			finitestate::StateMachine<shark>& getStateMachine() { return this->stateMachine; }
+			void setResting(bool _resting) { this->resting = _resting; }
+			bool isResting() const { return this->resting; }
 		private:
 			std::size_t steps = 0;
 
 			finitestate::StateMachine<shark> stateMachine;
 			// hoeveel tijd is verstreken sinds de laatste beweging
 			delta_time t_passed_{};
+
+			bool resting = false;
 
 			map::map_graph& graph;
 			map::map_node& initial;

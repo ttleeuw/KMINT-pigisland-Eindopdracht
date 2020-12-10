@@ -7,12 +7,13 @@
 #include "kmint/pigisland/algorithms/finitestate/StateMachine.hpp"
 #include "kmint/pigisland/algorithms/finitestate/boat/BoatWander.hpp"
 #include "kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.hpp"
+#include "kmint/pigisland/algorithms/finitestate/scorecard/ScoreCard.hpp"
 
 namespace kmint {
 	namespace pigisland {
 		class boat : public play::map_bound_actor {
 		public:
-			boat(map::map_graph& g, map::map_node& initial_node);
+			boat(map::map_graph& g, map::map_node& initial_node, finitestate::ScoreCard& _scoreCard);
 			// wordt elke game tick aangeroepen
 			void act(delta_time dt) override;
 			ui::drawable const& drawable() const override { return drawable_; }
@@ -28,11 +29,13 @@ namespace kmint {
 			finitestate::StateMachine<boat> getStateMachine() const { return this->stateMachine; }
 			map::map_graph& getGraph() { return graph; }
 			std::size_t getPaintDamage() { return paintDamge; }
+			void increasePaintDamage() { paintDamge++; }
 		private:
 			finitestate::StateMachine<boat> stateMachine;
 
 			map::map_graph& graph;
 
+			finitestate::ScoreCard& scoreCard;
 			std::size_t paintDamge = 0;
 			// hoeveel tijd is verstreken sinds de laatste beweging
 			delta_time t_passed_{};

@@ -23,6 +23,9 @@ namespace kmint {
                         }
                     }
                 }
+                else {
+                    entity->setResting(true);
+                }
             };
 
             void SharkTired::exit(shark* entity) {  entity->removeTint(); };

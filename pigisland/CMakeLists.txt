@@ -13,22 +13,42 @@ endif()
   
 add_executable(pigisland
   src/kmint/pigisland/main.cpp
-  "src/kmint/pigisland/algorithms/node_algorithm.cpp"
-  "src/kmint/pigisland/resources/resources.cpp"
-  "src/kmint/pigisland/entities/shark.cpp"
-  "src/kmint/pigisland/entities/boat.cpp"
-  "src/kmint/pigisland/entities/pig.cpp" 
+    "src/kmint/pigisland/algorithms/node_algorithm.cpp"
+    "src/kmint/pigisland/resources/resources.cpp"
+    "src/kmint/pigisland/entities/shark.cpp"
+    "src/kmint/pigisland/entities/boat.cpp"
+    "src/kmint/pigisland/entities/pig.cpp" 
 
-  "src/kmint/pigisland/datastructures/PriorityQueue.hpp"  
-  "src/kmint/pigisland/algorithms/pathfinder/AStarSearchStrategy.cpp" 
-  "src/kmint/pigisland/algorithms/pathfinder/AStarSearchStrategy.hpp" 
-  "src/kmint/pigisland/algorithms/pathfinder/ISearchStrategy.hpp" 
-  "src/kmint/pigisland/algorithms/pathfinder/PathFinder.hpp" 
+    "src/kmint/pigisland/datastructures/PriorityQueue.hpp"  
+    "src/kmint/pigisland/algorithms/pathfinder/AStarSearchStrategy.cpp" 
+    "src/kmint/pigisland/algorithms/pathfinder/AStarSearchStrategy.hpp" 
+    "src/kmint/pigisland/algorithms/pathfinder/ISearchStrategy.hpp" 
+    "src/kmint/pigisland/algorithms/pathfinder/PathFinder.hpp" 
   
-  
-  
-  "src/kmint/pigisland/algorithms/finitestate/shark/SharkWander.hpp"
-   "src/kmint/pigisland/algorithms/finitestate/shark/SharkChase.hpp" "src/kmint/pigisland/algorithms/finitestate/shark/SharkChase.cpp" "src/kmint/pigisland/algorithms/finitestate/shark/SharkWander.cpp" "src/kmint/pigisland/algorithms/finitestate/shark/SharkTired.hpp" "src/kmint/pigisland/algorithms/finitestate/shark/SharkTired.cpp" "src/kmint/pigisland/algorithms/finitestate/shark/SharkFlee.hpp" "src/kmint/pigisland/algorithms/finitestate/shark/SharkFlee.cpp" "src/kmint/pigisland/algorithms/finitestate/shark/SharkGlobalState.hpp" "src/kmint/pigisland/algorithms/finitestate/shark/SharkGlobalState.cpp" "src/kmint/pigisland/algorithms/finitestate/boat/BoatWander.hpp" "src/kmint/pigisland/algorithms/finitestate/boat/BoatRepair.hpp" "src/kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.hpp" "src/kmint/pigisland/algorithms/finitestate/boat/BoatWander.cpp" "src/kmint/pigisland/algorithms/finitestate/boat/BoatRepair.cpp" "src/kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.cpp" "src/kmint/pigisland/algorithms/finitestate/IState.hpp" "src/kmint/pigisland/algorithms/finitestate/IGlobalState.hpp" "src/kmint/pigisland/algorithms/finitestate/StateMachine.hpp" )
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkWander.hpp"
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkChase.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkChase.cpp" 
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkWander.cpp" 
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkTired.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkTired.cpp" 
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkFlee.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkFlee.cpp" 
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkGlobalState.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/shark/SharkGlobalState.cpp" 
+
+    "src/kmint/pigisland/algorithms/finitestate/boat/BoatWander.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/boat/BoatRepair.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/boat/BoatWander.cpp" 
+    "src/kmint/pigisland/algorithms/finitestate/boat/BoatRepair.cpp" 
+    "src/kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.cpp" 
+
+    "src/kmint/pigisland/algorithms/finitestate/IState.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/IGlobalState.hpp" 
+    "src/kmint/pigisland/algorithms/finitestate/StateMachine.hpp"  
+
+    "src/kmint/pigisland/algorithms/finitestate/scorecard/ScoreCard.hpp"
+    )
 
 target_compile_features(pigisland PUBLIC cxx_std_17)
 target_link_libraries(pigisland PRIVATE kmint)

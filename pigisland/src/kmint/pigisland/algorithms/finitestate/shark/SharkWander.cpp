@@ -11,10 +11,11 @@ namespace kmint {
             void SharkWander::execute(shark* entity) {
                 // laat ook even zien welke varkentjes hij ruikt
                 for (std::size_t i = 0; i < entity->num_perceived_actors(); ++i) {
-                    auto& a = entity->perceived_actor(i);
+                    kmint::play::actor& a = entity->perceived_actor(i);
 
                     // TODO check boat or pig
                     // pig;
+                        // TODO If pig hit; remove pig
                     if (!a.removed()) {
                         entity->getStateMachine().changeState(new SharkChase, entity);
                         return;
@@ -25,7 +26,6 @@ namespace kmint {
 
                    // }
                 }
-                // TODO If pig hit; remove pig
                 int next_index = random_int(0, entity->node().num_edges());
                 entity->node(entity->node()[next_index].to());
             };

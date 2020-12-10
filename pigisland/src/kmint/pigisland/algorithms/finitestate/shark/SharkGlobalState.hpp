@@ -12,7 +12,6 @@ namespace kmint {
             {
             public:
                 void execute(shark* entity) override;
-                std::string toString() override;
             };
         }
     }

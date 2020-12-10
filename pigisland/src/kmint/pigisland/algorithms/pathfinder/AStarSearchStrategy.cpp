@@ -34,6 +34,7 @@ namespace searchStrategy {
 
             if (nextClosestNode == _target) break;
 
+            
             for (std::size_t i = 0; i < _graph[nextClosestNode].num_edges(); ++i) {
                 auto edge = &_graph[nextClosestNode][i];
                 if (edge->to().tagged()) continue;

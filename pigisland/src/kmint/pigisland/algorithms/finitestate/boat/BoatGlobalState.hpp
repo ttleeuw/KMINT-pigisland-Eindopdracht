@@ -1,7 +1,6 @@
 #pragma once
-#include <string>
-#include "kmint/pigisland/algorithms/finitestate/IGlobalState.hpp"
 #include "kmint/pigisland/algorithms/finitestate/boat/BoatRepair.hpp"
+#include "kmint/pigisland/algorithms/finitestate/IGlobalState.hpp"
 
 namespace kmint {
     namespace pigisland {
@@ -13,7 +12,6 @@ namespace kmint {
                 virtual ~BoatGlobalState() {}
 
                 void execute(boat* entity) override;
-                std::string toString() override;
             };
         }
     }

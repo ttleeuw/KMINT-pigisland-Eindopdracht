@@ -5,14 +5,15 @@ namespace kmint {
     namespace pigisland {
         namespace finitestate {
             void BoatGlobalState::execute(boat* entity) {
-                // TODO
-                if (entity->getPaintDamage() >= STEPS_REQUIRED)
+                if (entity->getPaintDamage() == STEPS_REQUIRED)
                 {
                     entity->getStateMachine().changeState(new BoatRepair, entity);
                 }
+                else
+                {
+                    entity->increasePaintDamage();
+                }
             };
-
-            std::string BoatGlobalState::toString() { return "SharkWander"; };
         }
     }
 }

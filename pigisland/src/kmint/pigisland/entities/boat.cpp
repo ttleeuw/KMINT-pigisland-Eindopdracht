@@ -4,8 +4,8 @@
 #include "kmint/random.hpp"
 namespace kmint {
     namespace pigisland {
-        boat::boat(map::map_graph& g, map::map_node& initial_node)
-            : play::map_bound_actor{ initial_node }, graph(g), drawable_{ *this, graphics::image{boat_image()} } 
+        boat::boat(map::map_graph& g, map::map_node& initial_node, finitestate::ScoreCard& _scoreCard)
+            : play::map_bound_actor{ initial_node }, graph(g), drawable_{ *this, graphics::image{boat_image()} }, scoreCard(_scoreCard)
         {
             this->stateMachine.setCurrentState(new finitestate::BoatWander, this);
             this->stateMachine.setGlobalState(new finitestate::BoatGlobalState);
