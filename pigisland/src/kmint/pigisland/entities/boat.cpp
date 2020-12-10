@@ -13,7 +13,7 @@ namespace kmint {
 
 
         void boat::act(delta_time dt) {
-            t_passed_ += dt;
+            t_passed_ += dt * 10;
             if (to_seconds(t_passed_) >= 1) {
                 this->stateMachine.update(this);
 
@@ -26,8 +26,8 @@ namespace kmint {
             canMove = waitIfNecessary();
             if (canMove) {
                 int next_index = random_int(0, this->node().num_edges());
-                this->node(this->node()[next_index].to());
                 waitTimer = this->node()[next_index].weight() - 1;
+                this->node(this->node()[next_index].to());
             }
         }
 

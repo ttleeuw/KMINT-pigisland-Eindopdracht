@@ -50,7 +50,7 @@ namespace kmint {
                     }
                     // TODO if last node -> repair boat
                 }
-                else {
+                else if(path.empty()){
                     entity->getStateMachine().changeState(new BoatWander, entity);
                 }
             };
