@@ -16,13 +16,14 @@ namespace kmint {
             };
 
             void BoatRepair::execute(boat* entity) {
-                if (!path.empty()) {
+                // TODO; Check should flee
+                if (!path.empty() && entity->waitIfNecessary()) {
                     auto next = path.front();
                     path.pop();
                     for (size_t i = 0; i < entity->node().num_edges(); i++)
                     {
                         if (entity->node()[i].to().node_id() == next) {
-                            entity->node(entity->node()[i].to());
+                            entity->moveTo(entity->node()[i]);
                             break;
                         }
                     }
@@ -33,7 +34,7 @@ namespace kmint {
                         a.remove();
                     }
                 }
-                else {
+                else if(path.empty()){
                     entity->getStateMachine().changeState(new BoatWander, entity);
                 }
             };

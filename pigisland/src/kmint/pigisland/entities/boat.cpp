@@ -21,5 +21,31 @@ namespace kmint {
             }
         }
 
+        void boat::moveRandomly()
+        {
+            canMove = waitIfNecessary();
+            if (canMove) {
+                int next_index = random_int(0, this->node().num_edges());
+                waitTimer = this->node()[next_index].weight() - 1;
+                std::cout << "Weight: " << this->node()[next_index].weight() << std::endl;
+                this->node(this->node()[next_index].to());
+            }
+        }
+
+        void boat::moveTo(map::map_edge edge)
+        {
+            waitTimer = edge.weight() - 1;
+            this->node(edge.to());
+        }
+
+        bool boat::waitIfNecessary()
+        {
+            if (waitTimer <= 0) {
+                return true;
+            }
+            waitTimer--;
+            return false;
+        }
+
     } // namespace pigisland
 } // namespace kmint

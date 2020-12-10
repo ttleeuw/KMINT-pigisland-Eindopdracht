@@ -8,14 +8,7 @@ namespace kmint {
             void BoatWander::exit(boat* entity) { entity->removeTint(); };
 
             void BoatWander::execute(boat* entity) {
-                int next_index = random_int(0, entity->node().num_edges());
-                entity->node(entity->node()[next_index].to());
-                // TODO remove if pig, PIG saved
-                for (std::size_t i = 0; i < entity->num_colliding_actors(); ++i)
-                {
-                    auto& a = entity->colliding_actor(i);
-                    a.remove();
-                }
+                entity->moveRandomly();
             };
 
             std::string BoatWander::toString() { return "BoatWander"; };

@@ -31,6 +31,11 @@ namespace kmint {
 			std::size_t getPaintDamage() { return paintDamge; }
 			void repair(int repairValue) { paintDamge -= repairValue; }
 			void increasePaintDamage() { paintDamge++; }
+
+			bool getCanMove() { return canMove; };
+			void moveRandomly();
+			void moveTo(map::map_edge edge);
+			bool waitIfNecessary();
 		private:
 			finitestate::StateMachine<boat> stateMachine;
 
@@ -42,6 +47,10 @@ namespace kmint {
 			delta_time t_passed_{};
 			// weet hoe de koe getekend moet worden
 			play::image_drawable drawable_;
+
+			int waitTimer = 0;
+
+			bool canMove = true;
 		};
 	}
 }
