@@ -5,9 +5,11 @@ namespace kmint {
     namespace pigisland {
         namespace finitestate {
             void BoatGlobalState::execute(boat* entity) {
-                if (entity->getPaintDamage() == STEPS_REQUIRED)
+                if (entity->getPaintDamage() >= STEPS_REQUIRED)
                 {
-                    entity->getStateMachine().changeState(new BoatRepair, entity);
+                    if(!repair)
+                        entity->getStateMachine().changeState(new BoatRepair, entity);
+                    repair = true;
                 }
                 else
                 {

@@ -8,6 +8,8 @@ namespace kmint {
         namespace finitestate {
             class BoatGlobalState : public IGlobalState<boat>
             {
+            private:
+                bool repair = false;
             public:
                 virtual ~BoatGlobalState() {}
 

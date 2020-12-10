@@ -1,5 +1,6 @@
 #include "SharkChase.hpp"
 #include "kmint/pigisland/entities/shark.hpp"
+#include "kmint/pigisland/datastructures/PriorityQueue.hpp"
 
 namespace kmint {
     namespace pigisland {
@@ -8,6 +9,13 @@ namespace kmint {
                 entity->setTint(kmint::graphics::color(255, 25, 25, 0));
 
                 astar = std::make_unique<searchStrategy::AStarSearchStrategy>(entity->getGraph());
+
+                searchStrategy::PriorityQueue<int, double> priorityQueue;
+
+               /* auto dx = entity->location().x() - a.location().x();
+                auto dy = entity->location().y() - a.location().y();
+                auto costs = sqrt((double)dx * dx + (double)dy * dy);*/
+
 
                 for (std::size_t i = 0; i < entity->num_perceived_actors(); ++i) {
                     auto& a = entity->perceived_actor(i);
