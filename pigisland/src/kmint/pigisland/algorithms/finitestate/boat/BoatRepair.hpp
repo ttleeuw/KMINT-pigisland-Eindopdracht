@@ -1,6 +1,5 @@
 #pragma once
 #include <queue>
-
 #include "kmint/random.hpp"
 #include "kmint/primitives.hpp"
 #include "kmint/pigisland/algorithms/finitestate/IState.hpp"

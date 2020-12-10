@@ -26,9 +26,10 @@ namespace kmint {
 			void setTint(kmint::graphics::color tint) { this->drawable_.set_tint(tint); }
 			void removeTint() { this->drawable_.remove_tint(); }
 
-			finitestate::StateMachine<boat> getStateMachine() const { return this->stateMachine; }
+			finitestate::StateMachine<boat>& getStateMachine() { return this->stateMachine; }
 			map::map_graph& getGraph() { return graph; }
 			std::size_t getPaintDamage() { return paintDamge; }
+			void repair(int repairValue) { paintDamge -= repairValue; }
 			void increasePaintDamage() { paintDamge++; }
 
 			bool getCanMove() { return canMove; };
