@@ -46,7 +46,7 @@ int main() {
     // main_loop stuurt alle actors aan.
     main_loop(s, window, [&](delta_time dt, loop_controls &ctl) {
         if (first) {
-            ctl.time_scale *= 10.0;
+            ctl.time_scale *= 40.0;
             first = false;
         }
 
@@ -54,8 +54,6 @@ int main() {
             // TODO start over
             boatScoreCard.print();
         }
-
-        
 
         for (ui::events::event &e : event_source) {
             e.handle_quit([&ctl](ui::events::quit_event qe) { ctl.quit = true; });

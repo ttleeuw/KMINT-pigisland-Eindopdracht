@@ -8,26 +8,11 @@ namespace kmint {
             void BoatRepair::entry(boat* entity) {
                 entity->setTint(kmint::graphics::color(255, 0, 0, 0)); 
 
-				const int random_number = random_int(0, 3);
+                chosenDock = random_int(1, 4);
                 astar = std::make_unique<searchStrategy::AStarSearchStrategy>(entity->getGraph());
-                
                 // TODO Probabilistic finite state machines
-				if (random_number)
-				{
-                    astar = std::make_unique<searchStrategy::AStarSearchStrategy>(entity->getGraph());
-                    pathFinder.search(entity->node().node_id(), find_node_of_kind(entity->getGraph(), '1').node_id(), astar.get());
-                    path = astar->getShortestPath();
-				}
-                else if (random_number)
-                {
-                    pathFinder.search(entity->node().node_id(), find_node_of_kind(entity->getGraph(), '2').node_id(), astar.get());
-                    path = astar->getShortestPath();
-                }
-				else
-				{
-                    pathFinder.search(entity->node().node_id(), find_node_of_kind(entity->getGraph(), '3').node_id(), astar.get());
-                    path = astar->getShortestPath();
-				}
+                pathFinder.search(entity->node().node_id(), find_node_of_kind(entity->getGraph(), std::to_string(chosenDock)[0]).node_id(), astar.get());
+                path = astar->getShortestPath();
             };
 
             void BoatRepair::execute(boat* entity) {
@@ -47,7 +32,6 @@ namespace kmint {
                         auto& a = entity->colliding_actor(i);
                         a.remove();
                     }
-                    // TODO if last node -> repair boat
                 }
                 else {
                     entity->getStateMachine().changeState(new BoatWander, entity);
@@ -55,6 +39,22 @@ namespace kmint {
             };
 
             void BoatRepair::exit(boat* entity) {
+
+                switch (chosenDock)
+                {
+                case 1:
+                    entity->repair(random_int(MIN_DOCK_1, MAX_DOCK_1));
+                    break;
+                case 2:
+                    entity->repair(random_int(MIN_DOCK_2, MAX_DOCK_2));
+                    break;
+                case 3:
+                    entity->repair(DOCK_3);
+                    break;
+                default:
+                    break;
+                }
+                entity->getGraph().untag_all();
                 entity->removeTint();
             };
 

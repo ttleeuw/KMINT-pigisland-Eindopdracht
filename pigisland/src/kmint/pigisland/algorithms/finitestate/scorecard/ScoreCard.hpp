@@ -5,7 +5,10 @@
 namespace kmint {
     namespace pigisland {
         namespace finitestate {
-
+            struct ScoreData {
+                int pigsSaved = 0;
+                int receivedDamage = 0;
+            };
             class ScoreCard
             {
             private:
@@ -32,11 +35,16 @@ namespace kmint {
                     {2,{}},
                     {3,{}}
                 };
-
             public:
+                void dock(int repair, int dockingStation) {
+                    history[dockingStation].push_back(repair);
+                }
+
                 void print() const
                 {
-                    std::cout << "Dock 1 chance: " << dockOneChange << "\n" << "Dock 2 chance: " << dockTwoChange << "\n" << "Dock 3 chance: " << dockThreeChange << "\n";
+                    std::cout << "Dock 1 chance: " << dockOneChange << "\n" 
+                              << "Dock 2 chance: " << dockTwoChange << "\n" 
+                              << "Dock 3 chance: " << dockThreeChange << "\n";
                 }
 
                 void newRound()

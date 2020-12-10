@@ -13,6 +13,7 @@ namespace kmint {
                 }
                 else
                 {
+                    repair = false;
                     entity->increasePaintDamage();
                 }
             };
