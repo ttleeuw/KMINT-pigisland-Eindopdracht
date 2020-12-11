@@ -53,6 +53,7 @@ int main() {
         if (shark.isResting()) {
             // TODO start over
             boatScoreCard.print();
+            boatScoreCard.newRound();
         }
 
         for (ui::events::event &e : event_source) {

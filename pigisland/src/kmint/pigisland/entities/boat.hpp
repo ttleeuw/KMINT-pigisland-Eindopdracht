@@ -9,6 +9,7 @@
 #include "kmint/pigisland/algorithms/finitestate/boat/BoatWander.hpp"
 #include "kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.hpp"
 #include "kmint/pigisland/algorithms/finitestate/scorecard/ScoreCard.hpp"
+#include "kmint/pigisland/entities/DockingStation.hpp"
 
 namespace kmint {
 	namespace pigisland {
@@ -26,7 +27,10 @@ namespace kmint {
 			finitestate::StateMachine<boat>& getStateMachine() { return this->stateMachine; }
 
 			std::size_t getPaintDamage() { return steps; }
-			void repair(int repairValue) { steps -= repairValue; }
+			void repair(DockingStation dockingStation, int repairValue) { 
+				scoreCard.dock(dockingStation, repairValue);
+				steps -= repairValue; 
+			}
 			void increasePaintDamage() { steps++; }
 			void savePig();
 		private:

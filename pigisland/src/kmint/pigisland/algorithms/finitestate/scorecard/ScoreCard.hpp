@@ -1,57 +1,82 @@
 #pragma once
 #include <map>
 #include <vector>
+#include "kmint/pigisland/entities/DockingStation.hpp"
 
 namespace kmint {
     namespace pigisland {
         namespace finitestate {
-            struct ScoreData {
-                int pigsSaved = 0;
-                int receivedDamage = 0;
-            };
             class ScoreCard
             {
             private:
-                int pigsSaved = 0;
-                int receivedDamage = 0;
-
-                int effectiveness() {
-                    return pigsSaved + receivedDamage / 4;
-                }
-
-                int transitionWeight() {
-                    this->effectiveness() / (currentRound / effectiveness());
-                }
+                std::unordered_map<DockingStation, std::vector<int>> history =
+                {
+                    {DockingStation::DOCK_ONE,{}},
+                    {DockingStation::DOCK_TWO,{}},
+                    {DockingStation::DOCK_THREE,{}}
+                };
 
                 int currentRound = 1;
 
-                int dockOneChange = 33;
-                int dockTwoChange = 33;
-                int dockThreeChange = 33;
-
-                std::unordered_map<int, std::vector<int>> history =
-                {
-                    {1,{}},
-                    {2,{}},
-                    {3,{}}
-                };
+                int dockOneChance;
+                int dockTwoChance;
+                int dockThreeChance;
             public:
-                void dock(int repair, int dockingStation) {
-                    history[dockingStation].push_back(repair);
+                ScoreCard() {
+                    dockOneChance = 100 / 3;
+                    dockTwoChance = 100 / 3;
+                    dockThreeChance = 100 / 3;
+                }
+
+                void dock(DockingStation dockingStation, int repair) {
+                    history[dockingStation].emplace_back(repair); 
                 }
 
                 void print() const
                 {
-                    std::cout << "Dock 1 chance: " << dockOneChange << "\n" 
-                              << "Dock 2 chance: " << dockTwoChange << "\n" 
-                              << "Dock 3 chance: " << dockThreeChange << "\n";
+                    std::cout << "Dock 1 chance: " << dockOneChance << "\n" 
+                              << "Dock 2 chance: " << dockTwoChance << "\n"
+                              << "Dock 3 chance: " << dockThreeChance << "\n";
                 }
 
-                void newRound()
-                {
-                    currentRound++;
-                    pigsSaved = 0;
-                    receivedDamage = 0;
+                void newRound() { currentRound++; this->adjustChances(); }
+
+                void adjustChances() {
+                    float totalChance = (100 / 3) * 2;
+                    std::unordered_map<DockingStation, int> avarageMap;
+                    int totalRepaird = 0;
+
+                    for (size_t i = 0; i < history.size(); i++) {
+                        if (history[(DockingStation)(i + 1)].size() == 0) avarageMap.insert(std::make_pair((DockingStation)(i + 1), 100 / 3));
+                        else {
+                            int total = 0;
+                            int amount = 0;
+                            for (size_t j = 0; j < history[(DockingStation)(i + 1)].size(); j++)
+                            {
+                                total += history[(DockingStation)(i + 1)][j];
+                                amount++;
+                            }
+                            totalRepaird += total / amount;
+                            avarageMap.insert(std::make_pair((DockingStation)(i + 1), total / amount));
+                        }
+                    }
+
+                    for (auto& it : avarageMap) {
+                        switch (it.first)
+                        {
+                        case DockingStation::DOCK_ONE:
+                            dockOneChance = totalChance / totalRepaird * it.second;
+                            break;
+                        case DockingStation::DOCK_TWO:
+                            dockTwoChance = totalChance / totalRepaird * it.second;
+                            break;
+                        case DockingStation::DOCK_THREE:
+                            dockThreeChance = totalChance / totalRepaird * it.second;
+                            break;
+                        default:
+                            break;
+                        }
+                    }
                 }
             };
         }

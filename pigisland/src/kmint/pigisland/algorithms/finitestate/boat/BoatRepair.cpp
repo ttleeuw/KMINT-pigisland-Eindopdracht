@@ -31,13 +31,13 @@ namespace kmint {
                 switch (chosenDock)
                 {
                 case 1:
-                    entity->repair(random_int(MIN_DOCK_1, MAX_DOCK_1));
+                    entity->repair((DockingStation)chosenDock, random_int(MIN_DOCK_1, MAX_DOCK_1));
                     break;
                 case 2:
-                    entity->repair(random_int(MIN_DOCK_2, MAX_DOCK_2));
+                    entity->repair((DockingStation)chosenDock, random_int(MIN_DOCK_2, MAX_DOCK_2));
                     break;
                 case 3:
-                    entity->repair(DOCK_3);
+                    entity->repair((DockingStation)chosenDock, DOCK_3);
                     break;
                 default:
                     break;
