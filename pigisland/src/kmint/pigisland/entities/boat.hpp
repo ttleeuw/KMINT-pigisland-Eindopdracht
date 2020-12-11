@@ -25,6 +25,7 @@ namespace kmint {
 
 
 			finitestate::StateMachine<boat>& getStateMachine() { return this->stateMachine; }
+			finitestate::ScoreCard& getScoreCard() { return this->scoreCard; }
 
 			std::size_t getPaintDamage() { return steps; }
 			void repair(DockingStation dockingStation, int repairValue) { 

@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include "kmint/pigisland/entities/DockingStation.hpp"
+#include "kmint/random.hpp"
 
 namespace kmint {
     namespace pigisland {
@@ -37,6 +38,14 @@ namespace kmint {
                     std::cout << "Dock 1 chance: " << dockOneChance << "\n" 
                               << "Dock 2 chance: " << dockTwoChance << "\n"
                               << "Dock 3 chance: " << dockThreeChance << "\n";
+                }
+
+                DockingStation getRandomDock() {
+                    int result = random_int(0, dockOneChance + dockTwoChance + dockThreeChance);
+
+                    if (result < dockOneChance) return DockingStation::DOCK_ONE;
+                    else if(result < dockOneChance + dockTwoChance) return DockingStation::DOCK_TWO;
+                    else return DockingStation::DOCK_THREE;
                 }
 
                 void newRound() { currentRound++; this->adjustChances(); }
