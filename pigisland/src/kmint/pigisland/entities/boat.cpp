@@ -21,7 +21,6 @@ namespace kmint {
         }
 
         void boat::reset() {
-            this->node(initial);
             this->steps = 0;
             this->stateMachine.changeState(new finitestate::BoatWander, this);
             this->stateMachine.setGlobalState(new finitestate::BoatGlobalState);
@@ -29,6 +28,12 @@ namespace kmint {
 
         void boat::savePig() {
             // TODO 
+            for (std::size_t i = 0; i < this->num_colliding_actors(); ++i)
+            {
+                auto& actor = this->colliding_actor(i);
+                // TODO check if pig
+                actor.remove();
+            }
         }
     } // namespace pigisland
 } // namespace kmint

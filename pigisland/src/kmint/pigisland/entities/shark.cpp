@@ -43,10 +43,10 @@ namespace kmint {
         void shark::eatPig() {
             for (std::size_t i = 0; i < this->num_colliding_actors(); ++i)
             {
-                // TODO remove if pig
-                auto& a = this->colliding_actor(i);
-                a.remove();
+                auto& actor = this->colliding_actor(i);
+                // TODO check if pig
+                actor.remove();
             }
         }
-    } // namespace pigisland
-} // namespace kmint
+    }
+} 

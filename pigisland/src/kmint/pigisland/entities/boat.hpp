@@ -19,12 +19,12 @@ namespace kmint {
 			// wordt elke game tick aangeroepen
 			void act(delta_time dt) override;
 
-			// geeft de lengte van een zijde van de collision box van deze actor terug.
-			// Belangrijk voor collision detection
-			scalar collision_range() const override { return 16.0; }
-
 			finitestate::StateMachine<boat>& getStateMachine() { return this->stateMachine; }
 			finitestate::ScoreCard& getScoreCard() { return this->scoreCard; }
+
+			bool perceptive() const override { return false; }
+			// geeft het bereik aan waarbinnen een haai andere actors kan waarnemen.
+			scalar perception_range() const override { return 0.f; }
 
 			std::size_t getPaintDamage() { return steps; }
 			void repair(DockingStation dockingStation, int repairValue) { 
