@@ -8,8 +8,8 @@
 
 namespace kmint {
     namespace pigisland {
-        shark::shark(map::map_graph &g, map::map_node &initial_node)
-            : play::map_bound_actor{initial_node}, graph(g), initial(initial_node), drawable_{*this, graphics::image{ shark_image()} }
+        shark::shark(map::map_graph& g, map::map_node& initial_node)
+            : MapActor{ g, initial_node, *this, graphics::image{shark_image()} }
         {
             this->stateMachine.setCurrentState(new finitestate::SharkWander, this);
             this->stateMachine.setGlobalState(new finitestate::SharkGlobalState);
@@ -21,6 +21,21 @@ namespace kmint {
                 this->stateMachine.update(this);
 
                 t_passed_ = from_seconds(0);
+            }
+        }
+
+        bool shark::shouldFlee() {
+            // TODO 
+            return false;
+        }
+
+        void shark::eatPig() {
+            // TODO 
+            for (std::size_t i = 0; i < this->num_colliding_actors(); ++i)
+            {
+                // TODO remove if pig
+                auto& a = this->colliding_actor(i);
+                a.remove();
             }
         }
     } // namespace pigisland

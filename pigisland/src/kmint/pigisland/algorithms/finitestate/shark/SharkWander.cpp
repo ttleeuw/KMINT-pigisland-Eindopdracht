@@ -9,19 +9,22 @@ namespace kmint {
             void SharkWander::exit(shark* entity) { entity->removeTint(); };
 
             void SharkWander::execute(shark* entity) {
-                // TODO check flee
+                if (entity->shouldFlee()) {
+                    entity->getStateMachine().changeState(new SharkFlee, entity);
+                }
                 for (std::size_t i = 0; i < entity->num_perceived_actors(); ++i) {
                     kmint::play::actor& a = entity->perceived_actor(i);
 
-                    // TODO check IF PIG
-                    // TODO remove pig
+                    // TODO check boat or pig
+                    // pig;
+                        // TODO If pig hit; remove pig
                     if (!a.removed()) {
                         entity->getStateMachine().changeState(new SharkChase, entity);
                         return;
-                    }    
+                    }
                 }
-                int next_index = random_int(0, entity->node().num_edges());
-                entity->node(entity->node()[next_index].to());
+                entity->moveRandomly();
+                entity->eatPig();
             };
 
             std::string SharkWander::toString() { return "SharkWander"; };

@@ -16,25 +16,12 @@ namespace kmint {
             };
 
             void BoatRepair::execute(boat* entity) {
-                // TODO; Check should flee
                 if (!path.empty() && entity->waitIfNecessary()) {
-                    auto next = path.front();
-                    path.pop();
-                    for (size_t i = 0; i < entity->node().num_edges(); i++)
-                    {
-                        if (entity->node()[i].to().node_id() == next) {
-                            entity->moveTo(entity->node()[i]);
-                            break;
-                        }
-                    }
-                    // TODO remove if pig, PIG saved
-                    for (std::size_t i = 0; i < entity->num_colliding_actors(); ++i)
-                    {
-                        auto& a = entity->colliding_actor(i);
-                        a.remove();
-                    }
+                    entity->moveWithPath(path);
+                    // Save
+                    entity->savePig();
                 }
-                else if(path.empty()){
+                else if (path.empty()) {
                     entity->getStateMachine().changeState(new BoatWander, entity);
                 }
             };

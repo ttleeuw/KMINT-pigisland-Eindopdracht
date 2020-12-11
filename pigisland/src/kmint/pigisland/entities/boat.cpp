@@ -5,7 +5,7 @@
 namespace kmint {
     namespace pigisland {
         boat::boat(map::map_graph& g, map::map_node& initial_node, finitestate::ScoreCard& _scoreCard)
-            : play::map_bound_actor{ initial_node }, graph(g), drawable_{ *this, graphics::image{boat_image()} }, scoreCard(_scoreCard)
+            : MapActor{ g, initial_node, *this, graphics::image{boat_image()} }, scoreCard(_scoreCard)
         {
             this->stateMachine.setCurrentState(new finitestate::BoatWander, this);
             this->stateMachine.setGlobalState(new finitestate::BoatGlobalState);
@@ -21,31 +21,8 @@ namespace kmint {
             }
         }
 
-        void boat::moveRandomly()
-        {
-            canMove = waitIfNecessary();
-            if (canMove) {
-                int next_index = random_int(0, this->node().num_edges());
-                waitTimer = this->node()[next_index].weight() - 1;
-                std::cout << "Weight: " << this->node()[next_index].weight() << std::endl;
-                this->node(this->node()[next_index].to());
-            }
+        void boat::savePig() {
+            // TODO 
         }
-
-        void boat::moveTo(map::map_edge edge)
-        {
-            waitTimer = edge.weight() - 1;
-            this->node(edge.to());
-        }
-
-        bool boat::waitIfNecessary()
-        {
-            if (waitTimer <= 0) {
-                return true;
-            }
-            waitTimer--;
-            return false;
-        }
-
     } // namespace pigisland
 } // namespace kmint

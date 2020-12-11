@@ -4,6 +4,7 @@
 #include "kmint/pigisland/algorithms/finitestate/IState.hpp"
 #include "kmint/pigisland/algorithms/finitestate/shark/SharkTired.hpp"
 #include "kmint/pigisland/algorithms/finitestate/shark/SharkChase.hpp"
+#include "kmint/pigisland/algorithms/finitestate/shark/SharkFlee.hpp"
 
 namespace kmint {
     namespace pigisland {

@@ -8,8 +8,7 @@ namespace kmint {
             void SharkFlee::exit(shark* entity) { entity->removeTint(); };
 
             void SharkFlee::execute(shark* entity) {
-                int next_index = random_int(0, entity->node().num_edges());
-                entity->node(entity->node()[next_index].to());
+                entity->moveRandomly();
                 steps++;
                 if (steps == MAX_STEPS) {
                     entity->getStateMachine().changeState(new SharkWander, entity);

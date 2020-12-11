@@ -9,6 +9,7 @@ namespace kmint {
 
             void BoatWander::execute(boat* entity) {
                 entity->moveRandomly();
+                entity->savePig();
             };
 
             std::string BoatWander::toString() { return "BoatWander"; };
