@@ -6,6 +6,8 @@
 #include "kmint/primitives.hpp"
 #include "kmint/pigisland/entities/base/MapActor.hpp"
 #include "kmint/pigisland/algorithms/finitestate/StateMachine.hpp"
+#include "kmint/pigisland/algorithms/finitestate/shark/SharkWander.hpp"
+#include "kmint/pigisland/algorithms/finitestate/shark/SharkGlobalState.hpp"
 
 namespace kmint {
 	namespace pigisland {
@@ -25,6 +27,7 @@ namespace kmint {
 			bool isResting() const { return this->resting; }
 			bool shouldFlee();
 			void eatPig();
+			void reset() override;
 		private:
 			finitestate::StateMachine<shark> stateMachine;
 			bool resting = false;

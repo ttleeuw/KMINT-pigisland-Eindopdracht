@@ -23,7 +23,6 @@ namespace kmint {
 			// Belangrijk voor collision detection
 			scalar collision_range() const override { return 16.0; }
 
-
 			finitestate::StateMachine<boat>& getStateMachine() { return this->stateMachine; }
 			finitestate::ScoreCard& getScoreCard() { return this->scoreCard; }
 
@@ -34,6 +33,8 @@ namespace kmint {
 			}
 			void increasePaintDamage() { steps++; }
 			void savePig();
+
+			void reset() override;
 		private:
 			finitestate::StateMachine<boat> stateMachine;
 			finitestate::ScoreCard& scoreCard;

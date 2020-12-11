@@ -31,6 +31,8 @@ namespace kmint {
 			void moveRandomly();
 			void moveWithPath(std::queue<int>& path);
 			bool waitIfNecessary();
+
+			virtual void reset() = 0;
 		protected:
 			std::size_t steps = 0;
 

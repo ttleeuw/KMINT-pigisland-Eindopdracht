@@ -2,14 +2,14 @@
 #include <queue>
 
 namespace searchStrategy {
-	template<typename T, typename priority_t>
+	template<typename T, typename priority>
 	struct PriorityQueue {
-		using element = std::pair<priority_t, T>;
+		using element = std::pair<priority, T>;
 
 		std::priority_queue<element, std::vector<element>, std::greater<>> elements;
 
 		bool empty() const { return elements.empty(); }
-		void insert(T item, priority_t priority) { elements.emplace(priority, item); }
+		void insert(T item, priority priority) { elements.emplace(priority, item); }
 
 		T pop() {
 			T best_item = elements.top().second;

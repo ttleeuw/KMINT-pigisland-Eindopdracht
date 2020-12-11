@@ -51,13 +51,70 @@ namespace kmint {
                 void newRound() { currentRound++; this->adjustChances(); }
 
                 void adjustChances() {
-                    float totalChance = (100 / 3) * 2;
-                    std::unordered_map<DockingStation, int> avarageMap;
-                    int totalRepaird = 0;
 
+                    int counter = 0;
                     for (size_t i = 0; i < history.size(); i++) {
-                        if (history[(DockingStation)(i + 1)].size() == 0) avarageMap.insert(std::make_pair((DockingStation)(i + 1), 100 / 3));
-                        else {
+                        if (history[(DockingStation)(i + 1)].size() != 0) counter++;
+                    };
+
+                    if (counter == 2) {
+                        float totalChance = (100 / 3) * 2;
+                        std::unordered_map<DockingStation, int> avarageMap;
+                        int totalRepaird = 0;
+
+                        for (size_t i = 0; i < history.size(); i++) {
+                            if (history[(DockingStation)(i + 1)].size() == 0) {
+                                switch ((DockingStation)(i + 1))
+                                {
+                                case DockingStation::DOCK_ONE:
+                                    dockOneChance = 100 / 3;
+                                    break;
+                                case DockingStation::DOCK_TWO:
+                                    dockTwoChance = 100 / 3;
+                                    break;
+                                case DockingStation::DOCK_THREE:
+                                    dockThreeChance = 100 / 3;
+                                    break;
+                                default:
+                                    break;
+                                }
+                                continue;
+                            }
+                            else {
+                                int total = 0;
+                                int amount = 0;
+                                for (size_t j = 0; j < history[(DockingStation)(i + 1)].size(); j++)
+                                {
+                                    total += history[(DockingStation)(i + 1)][j];
+                                    amount++;
+                                }
+                                totalRepaird += total / amount;
+                                avarageMap.insert(std::make_pair((DockingStation)(i + 1), total / amount));
+                            }
+                        }
+                        for (auto& it : avarageMap) {
+                            switch (it.first)
+                            {
+                            case DockingStation::DOCK_ONE:
+                                dockOneChance = totalChance / totalRepaird * it.second;
+                                break;
+                            case DockingStation::DOCK_TWO:
+                                dockTwoChance = totalChance / totalRepaird * it.second;
+                                break;
+                            case DockingStation::DOCK_THREE:
+                                dockThreeChance = totalChance / totalRepaird * it.second;
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                    else if (counter == 3) {
+                        float totalChance = 100;
+                        std::unordered_map<DockingStation, int> avarageMap;
+                        int totalRepaird = 0;
+
+                        for (size_t i = 0; i < history.size(); i++) {
                             int total = 0;
                             int amount = 0;
                             for (size_t j = 0; j < history[(DockingStation)(i + 1)].size(); j++)
@@ -68,22 +125,22 @@ namespace kmint {
                             totalRepaird += total / amount;
                             avarageMap.insert(std::make_pair((DockingStation)(i + 1), total / amount));
                         }
-                    }
 
-                    for (auto& it : avarageMap) {
-                        switch (it.first)
-                        {
-                        case DockingStation::DOCK_ONE:
-                            dockOneChance = totalChance / totalRepaird * it.second;
-                            break;
-                        case DockingStation::DOCK_TWO:
-                            dockTwoChance = totalChance / totalRepaird * it.second;
-                            break;
-                        case DockingStation::DOCK_THREE:
-                            dockThreeChance = totalChance / totalRepaird * it.second;
-                            break;
-                        default:
-                            break;
+                        for (auto& it : avarageMap) {
+                            switch (it.first)
+                            {
+                            case DockingStation::DOCK_ONE:
+                                dockOneChance = totalChance / totalRepaird * it.second;
+                                break;
+                            case DockingStation::DOCK_TWO:
+                                dockTwoChance = totalChance / totalRepaird * it.second;
+                                break;
+                            case DockingStation::DOCK_THREE:
+                                dockThreeChance = totalChance / totalRepaird * it.second;
+                                break;
+                            default:
+                                break;
+                            }
                         }
                     }
                 }

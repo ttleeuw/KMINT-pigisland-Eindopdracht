@@ -16,9 +16,15 @@ namespace kmint {
             t_passed_ += dt;
             if (to_seconds(t_passed_) >= 1) {
                 this->stateMachine.update(this);
-
                 t_passed_ = from_seconds(0);
             }
+        }
+
+        void boat::reset() {
+            this->node(initial);
+            this->steps = 0;
+            this->stateMachine.changeState(new finitestate::BoatWander, this);
+            this->stateMachine.setGlobalState(new finitestate::BoatGlobalState);
         }
 
         void boat::savePig() {

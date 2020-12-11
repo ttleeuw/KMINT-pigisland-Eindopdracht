@@ -14,7 +14,6 @@ namespace kmint {
 		private:
 			play::image_drawable drawable_;
 		};
-	} // namespace pigisland
-} // namespace kmint
-
-#endif /* KMINT_PIGISLAND_PIG_HPP */
+	} 
+} 
+#endif 

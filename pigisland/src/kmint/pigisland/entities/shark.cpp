@@ -2,8 +2,6 @@
 
 #include "kmint/pigisland/entities/shark.hpp"
 #include "kmint/pigisland/algorithms/node_algorithm.hpp"
-#include "kmint/pigisland/algorithms/finitestate/shark/SharkWander.hpp"
-#include "kmint/pigisland/algorithms/finitestate/shark/SharkGlobalState.hpp"
 #include "kmint/pigisland/resources/resources.hpp"
 
 namespace kmint {
@@ -25,12 +23,24 @@ namespace kmint {
         }
 
         bool shark::shouldFlee() {
-            // TODO 
+            for (std::size_t i = 0; i < this->num_perceived_actors(); ++i)
+            {
+                auto& a = this->perceived_actor(i);
+                // TODO check if boat
+                int k = 0;
+            }
             return false;
         }
 
+        void shark::reset() {
+            this->node(initial);
+            this->steps = 0;
+            this->resting = false;
+            this->stateMachine.changeState(new finitestate::SharkWander, this);
+            this->stateMachine.setGlobalState(new finitestate::SharkGlobalState);
+        }
+
         void shark::eatPig() {
-            // TODO 
             for (std::size_t i = 0; i < this->num_colliding_actors(); ++i)
             {
                 // TODO remove if pig
