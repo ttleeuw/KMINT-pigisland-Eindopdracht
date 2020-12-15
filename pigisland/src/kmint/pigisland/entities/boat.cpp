@@ -2,6 +2,7 @@
 #include "kmint/pigisland/algorithms/node_algorithm.hpp"
 #include "kmint/pigisland/resources/resources.hpp"
 #include "kmint/random.hpp"
+#include <kmint/pigisland/entities/pig.hpp>
 namespace kmint {
     namespace pigisland {
         boat::boat(map::map_graph& g, map::map_node& initial_node, finitestate::ScoreCard& _scoreCard)
@@ -31,8 +32,10 @@ namespace kmint {
             for (std::size_t i = 0; i < this->num_colliding_actors(); ++i)
             {
                 auto& actor = this->colliding_actor(i);
+                if (typeid(actor) == typeid(pig)) {
+                    actor.remove();
+                }
                 // TODO check if pig
-                actor.remove();
             }
         }
     } // namespace pigisland

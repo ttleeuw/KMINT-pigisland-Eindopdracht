@@ -12,15 +12,10 @@ namespace kmint {
 
 			virtual void act(delta_time dt) override = 0;
 
-			// als incorporeal false is, doet de actor mee aan collision detection
 			bool incorporeal() const override { return false; }
-			// geeft de lengte van een zijde van de collision box van deze actor terug.
-			// Belangrijk voor collision detection
 			scalar collision_range() const override { return 32.0f; }
 
-			// geeft aan dat de haai andere actors kan zien
 			virtual bool perceptive() const override = 0;
-			// geeft het bereik aan waarbinnen een haai andere actors kan waarnemen.
 			virtual scalar perception_range() const override = 0;
 
 			ui::drawable const& drawable() const override { return drawable_; }

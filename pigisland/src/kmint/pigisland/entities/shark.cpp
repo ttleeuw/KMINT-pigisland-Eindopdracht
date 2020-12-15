@@ -3,6 +3,8 @@
 #include "kmint/pigisland/entities/shark.hpp"
 #include "kmint/pigisland/algorithms/node_algorithm.hpp"
 #include "kmint/pigisland/resources/resources.hpp"
+#include <kmint/pigisland/entities/pig.hpp>
+#include <kmint/pigisland/entities/boat.hpp>
 
 namespace kmint {
     namespace pigisland {
@@ -25,9 +27,10 @@ namespace kmint {
         bool shark::shouldFlee() {
             for (std::size_t i = 0; i < this->num_perceived_actors(); ++i)
             {
-                auto& a = this->perceived_actor(i);
-                // TODO check if boat
-                int k = 0;
+                auto& actor = this->perceived_actor(i);
+                if (typeid(actor) == typeid(boat)) {
+                    return true;
+                }
             }
             return false;
         }
@@ -44,8 +47,9 @@ namespace kmint {
             for (std::size_t i = 0; i < this->num_colliding_actors(); ++i)
             {
                 auto& actor = this->colliding_actor(i);
-                // TODO check if pig
-                actor.remove();
+                if (typeid(actor) == typeid(pig)) {
+                    actor.remove();
+                }
             }
         }
     }

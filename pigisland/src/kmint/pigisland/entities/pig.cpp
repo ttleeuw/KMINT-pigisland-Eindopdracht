@@ -7,6 +7,11 @@ namespace kmint {
         pig::pig(math::vector2d location)
           : play::free_roaming_actor{location}, drawable_{*this, pig_image()} 
         {
+			
         }
+
+		void pig::move() {
+			
+		}
     } // namespace pigisland
 } // namespace kmint

@@ -17,6 +17,8 @@ namespace kmint {
 			  // geeft de lengte van een zijde van de collision box van deze actor terug.
 			  // Belangrijk voor collision detection
 			  scalar collision_range() const override { return 16.0; }
+
+			  void move();
 		private:
 			play::image_drawable drawable_;
 		};

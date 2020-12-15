@@ -15,7 +15,7 @@ namespace kmint {
                     if (!a.removed()) {
                         map::map_node* node = &entity->getGraph()[0];
                         std::for_each(entity->getGraph().begin(), entity->getGraph().end(), [&](map::map_node& n) {
-                            if (math::distance(n.location(), a.location()) < math::distance(node->location(), a.location())) node = &n;
+                                if (math::distance(n.location(), a.location()) < math::distance(node->location(), a.location())) node = &n;
                             });
                         pathFinder.search(entity->node().node_id(), node->node_id(), astar.get());
                         this->path = astar->getShortestPath();
@@ -27,10 +27,11 @@ namespace kmint {
             void SharkChase::execute(shark* entity) {
                 if (entity->shouldFlee()) {
                     entity->getStateMachine().changeState(new SharkFlee, entity);
+                    return;
                 }
+                entity->eatPig();
                 if (!path.empty()) {
                     entity->moveWithPath(path);
-                    entity->eatPig();
                 }
                 else {
                     entity->getStateMachine().changeState(new SharkWander, entity);
