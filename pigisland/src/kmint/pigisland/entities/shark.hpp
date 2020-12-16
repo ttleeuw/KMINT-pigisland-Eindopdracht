@@ -17,9 +17,7 @@ namespace kmint {
 
 			void act(delta_time dt) override;
 
-			// geeft aan dat de haai andere actors kan zien
 			bool perceptive() const override { return true; }
-			// geeft het bereik aan waarbinnen een haai andere actors kan waarnemen.
 			scalar perception_range() const override { return 200.f; }
 
 			finitestate::StateMachine<shark>& getStateMachine() { return this->stateMachine; }
@@ -32,6 +30,6 @@ namespace kmint {
 			finitestate::StateMachine<shark> stateMachine;
 			bool resting = false;
 		};
-	} // namespace pigisland
-} // namespace kmint
-#endif /* KMINT_PIGISLAND_SHARK_HPP */
+	}
+}
+#endif

@@ -19,7 +19,6 @@ namespace kmint {
             void BoatRepair::execute(boat* entity) {
                 if (!path.empty() && entity->waitIfNecessary()) {
                     entity->moveWithPath(path);
-                    // Save
                     entity->savePig();
                 }
                 else if (path.empty()) {

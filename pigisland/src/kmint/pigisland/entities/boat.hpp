@@ -16,21 +16,17 @@ namespace kmint {
 		class boat : public MapActor {
 		public:
 			boat(map::map_graph& g, map::map_node& initial_node, finitestate::ScoreCard& _scoreCard);
-			// wordt elke game tick aangeroepen
+			
 			void act(delta_time dt) override;
 
 			finitestate::StateMachine<boat>& getStateMachine() { return this->stateMachine; }
 			finitestate::ScoreCard& getScoreCard() { return this->scoreCard; }
 
 			bool perceptive() const override { return false; }
-			// geeft het bereik aan waarbinnen een haai andere actors kan waarnemen.
 			scalar perception_range() const override { return 0.f; }
 
 			std::size_t getPaintDamage() { return steps; }
-			void repair(DockingStation dockingStation, int repairValue) { 
-				scoreCard.dock(dockingStation, repairValue);
-				steps -= repairValue; 
-			}
+			void repair(DockingStation dockingStation, int repairValue);
 			void increasePaintDamage() { steps++; }
 			void savePig();
 
