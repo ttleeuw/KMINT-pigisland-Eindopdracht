@@ -16,7 +16,8 @@ namespace kmint {
             canMove = waitIfNecessary();
             if (canMove) {
                 int next_index = random_int(0, this->node().num_edges());
-                waitTimer = this->node()[next_index].weight() - 1;
+                map::map_edge edge = this->node()[next_index];
+                waitTimer = edge.to()[0].weight() - 1;
                 this->node(this->node()[next_index].to());
             }
         }
@@ -30,7 +31,8 @@ namespace kmint {
                 for (size_t i = 0; i < this->node().num_edges(); i++)
                 {
                     if (this->node()[i].to().node_id() == next) {
-                        waitTimer = this->node()[i].weight() - 1;
+                        map::map_edge edge = this->node()[i];
+                        waitTimer = edge.to()[0].weight() - 1;
                         this->node(this->node()[i].to());
                         break;
                     }
