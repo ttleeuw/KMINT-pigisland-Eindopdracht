@@ -60,9 +60,9 @@ int main() {
             boat.reset();
 
             // TODO remove old pigs and spawn new onces
-            /*for (auto& pig : pigs) { pig->remove(); }
+            for (auto& pig : pigs) { pig->remove(); }
             auto locs = pigisland::random_pig_locations(100);
-            for (auto loc : locs) { pigs.push_back(&s.build_actor<pigisland::pig>(loc)); }*/
+            for (auto loc : locs) { pigs.push_back(&s.build_actor<pigisland::pig>(loc)); }
         }
 
         for (ui::events::event &e : event_source) {
