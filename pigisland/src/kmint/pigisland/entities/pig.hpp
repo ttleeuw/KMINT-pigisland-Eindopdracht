@@ -4,6 +4,7 @@
 #include "kmint/play.hpp"
 #include <tuple>
 #include <vector>
+#include "kmint/pigisland/algorithms/forcedrivenentities/SteeringBehaviours.hpp"
 
 namespace kmint {
 	namespace pigisland {
@@ -19,8 +20,15 @@ namespace kmint {
 			  scalar perception_range() const override { return 200.f; }
 
 			  void move();
+
+			  void act(delta_time dt) override;
+
+			  math::vector2d& getTarget() { return this->target; }
 		private:
+			delta_time t_passed_{};
+			math::vector2d target;
 			play::image_drawable drawable_;
+			forcedrivenentities::SteeringBehaviours steeringBehaviour;
 		};
 	} 
 } 

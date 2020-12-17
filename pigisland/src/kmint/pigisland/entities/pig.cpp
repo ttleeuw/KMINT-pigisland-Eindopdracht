@@ -11,7 +11,15 @@ namespace kmint {
         }
 
 		void pig::move() {
-			
+            steeringBehaviour.cohesion(*this);
 		}
+
+        void pig::act(delta_time dt) {
+            t_passed_ += dt;
+            if (to_seconds(t_passed_) >= 1) {
+                this->move();
+                t_passed_ = from_seconds(0);
+            }
+        }
     } // namespace pigisland
 } // namespace kmint

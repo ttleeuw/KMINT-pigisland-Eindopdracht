@@ -48,7 +48,7 @@ add_executable(pigisland
     "src/kmint/pigisland/algorithms/finitestate/StateMachine.hpp"  
 
     "src/kmint/pigisland/algorithms/finitestate/scorecard/ScoreCard.hpp"
-     "src/kmint/pigisland/entities/base/MapActor.hpp" "src/kmint/pigisland/entities/base/MapActor.cpp" "src/kmint/pigisland/entities/DockingStation.hpp"    "src/kmint/pigisland/algorithms/forcedrivenentities/SteeringBehaviours.hpp" "src/kmint/pigisland/algorithms/forcedrivenentities/SteeringBehaviours.cpp")
+     "src/kmint/pigisland/entities/base/MapActor.hpp" "src/kmint/pigisland/entities/base/MapActor.cpp" "src/kmint/pigisland/entities/DockingStation.hpp"    "src/kmint/pigisland/algorithms/forcedrivenentities/SteeringBehaviours.hpp" "src/kmint/pigisland/algorithms/forcedrivenentities/SteeringBehaviours.cpp" "src/kmint/pigisland/entities/base/MovingEntity.hpp" "src/kmint/pigisland/entities/base/MovingEntity.cpp")
 
 target_compile_features(pigisland PUBLIC cxx_std_17)
 target_link_libraries(pigisland PRIVATE kmint)
