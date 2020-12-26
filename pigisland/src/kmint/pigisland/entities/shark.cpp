@@ -11,14 +11,14 @@ namespace kmint {
         shark::shark(map::map_graph& g, map::map_node& initial_node)
             : MapActor{ g, initial_node, *this, graphics::image{shark_image()} }
         {
-            this->stateMachine.setCurrentState(new finitestate::SharkWander, this);
-            this->stateMachine.setGlobalState(new finitestate::SharkGlobalState);
+            this->stateMachine.setCurrentState(std::make_unique<finitestate::SharkWander>(), *this);
+            this->stateMachine.setGlobalState(std::make_unique<finitestate::SharkGlobalState>(), *this);
         }
 
         void shark::act(delta_time dt) {
             t_passed_ += dt;
             if (to_seconds(t_passed_) >= 1) {
-                this->stateMachine.update(this);
+                this->stateMachine.update(*this);
 
                 t_passed_ = from_seconds(0);
             }
@@ -35,12 +35,23 @@ namespace kmint {
             return false;
         }
 
+        bool shark::shouldChase() {
+            for (std::size_t i = 0; i < this->num_perceived_actors(); ++i) {
+                kmint::play::actor& a = this->perceived_actor(i);
+
+                if (!a.removed() && typeid(actor) == typeid(pig)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         void shark::reset() {
             this->node(initial);
             this->steps = 0;
             this->resting = false;
-            this->stateMachine.changeState(new finitestate::SharkWander, this);
-            this->stateMachine.setGlobalState(new finitestate::SharkGlobalState);
+            this->stateMachine.changeState(std::make_unique<finitestate::SharkWander>(), *this);
+            this->stateMachine.setGlobalState(std::make_unique<finitestate::SharkGlobalState>(), *this);
         }
 
         void shark::eatPig() {

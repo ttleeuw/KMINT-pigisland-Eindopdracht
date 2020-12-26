@@ -25,16 +25,17 @@ namespace kmint {
 
 			virtual void act(delta_time dt) override = 0;
 
-			math::vector2d& getTarget() { return this->target; }
+			kmint::math::vector2d& getTarget() { return this->target; }
 
 			void setAcceleration(math::vector2d steeringForce) {
-				acceleration = steeringForce / mass;
+				acceleration = steeringForce / mass();
 			}
 
-			void setVelocity(math::vector2d v) {
+			void setVelocity(kmint::math::vector2d v) {
 				auto l = calcVectorLength(v);
-				velocity = truncate(velocity, maxSpeed);
+				velocity = truncate(velocity, maxSpeed());
 			}
+			kmint::math::vector2d getVelocity() { return this->velocity; }
 
 			void setPosition(delta_time dt) {
 				position += velocity * dt.count();
@@ -69,12 +70,29 @@ namespace kmint {
 			}
 
 			math::vector2d side() const { return { 1.0, 0.0 }; }
+
+			//NOTE: these weight modifiers are used to tweak
+			double wanderJitter() const { return 1; }
+			double wanderRadius() const { return 1; }
+			double wanderDistance() const { return 1; }
+
+			double separationWeight() const { return 1; }
+			double cohesionWeight() const { return 1; }
+			double alignmentWeight() const { return 1; }
+
+			double seekWeight() const { return 1; }
+			double persuitWeight() const { return 1; }
+			double wanderWeight() const { return 1; }
+			double fleeWeight() const { return 1; }
+
+			float mass() const { return 1; }
+			float getForce() const { return this->force; }
+			float maxForce() const { return 4; }
+			float maxTurnRate() const { return 1; }
+			float maxSpeed() const { return 4; }
 		protected:
-			float mass; // const
-			float force; // var
-			float maxForce;
-			float maxTurnRate;
-			float maxSpeed;
+			// var
+			float force; 
 
 			math::vector2d acceleration; // calculated
 			math::vector2d velocity; // calculated

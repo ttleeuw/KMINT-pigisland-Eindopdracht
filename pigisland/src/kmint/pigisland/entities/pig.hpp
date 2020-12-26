@@ -12,6 +12,8 @@ namespace kmint {
 		public:
 			  pig(math::vector2d location);
 
+			  
+
 			  void move() override;
 
 			  void act(delta_time dt) override;

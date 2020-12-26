@@ -1,5 +1,5 @@
 #include "SteeringBehaviours.hpp"
-#include "kmint/pigisland/entities/pig.hpp"
+#include "kmint/pigisland/entities/base/MovingEntity.hpp"
 #include <cmath>
 
 namespace kmint {
@@ -8,13 +8,13 @@ namespace kmint {
             // feelers
         // ostacle avoidance
         namespace forcedrivenentities {
-            std::vector<std::reference_wrapper<pig>> SteeringBehaviours::getNeighbours(pig& owner) {
-                std::vector<std::reference_wrapper<pig>> returnVector;
+            std::vector<std::reference_wrapper<MovingEntity>> SteeringBehaviours::getNeighbours(MovingEntity& owner) {
+                std::vector<std::reference_wrapper<MovingEntity>> returnVector;
                 for (std::size_t i = 0; i < owner.num_perceived_actors(); ++i)
                 {
                     auto& actor = owner.perceived_actor(i);
-                    if (typeid(actor) == typeid(pig)) {
-                        auto p = dynamic_cast<pig*>(&actor);
+                    if (typeid(actor) == typeid(MovingEntity)) {
+                        auto p = dynamic_cast<MovingEntity*>(&actor);
                         returnVector.push_back(*p);
                     }
                 }
@@ -23,7 +23,7 @@ namespace kmint {
 
             // cohesion
                 // rangekijken -> middelpunt van alle neighbours
-            kmint::math::vector2d SteeringBehaviours::cohesion(pig& owner) {
+            kmint::math::vector2d SteeringBehaviours::cohesion(MovingEntity& owner) {
                 kmint::math::vector2d centerOfMass, steeringForce;
                 float xTotal = 0;
                 float yTotal = 0;
@@ -49,7 +49,7 @@ namespace kmint {
                 // range kijken -> entiteiten die erin liggen
                 // tel vectoren richting neighbours
                 // ga andere kant op van die uitkomst
-            kmint::math::vector2d SteeringBehaviours::separation(pig& owner) {
+            kmint::math::vector2d SteeringBehaviours::separation(MovingEntity& owner) {
                 kmint::math::vector2d steeringForce;
                 float x = 0;
                 float y = 0;
@@ -72,7 +72,7 @@ namespace kmint {
                 // range kijken -> entiteiten die erin liggen
                 // tel vectoren richting van de neighbours
                 // normalizeer -> nieuwe richting
-            kmint::math::vector2d SteeringBehaviours::alignment(pig& owner) {
+            kmint::math::vector2d SteeringBehaviours::alignment(MovingEntity& owner) {
                 kmint::math::vector2d steeringForce;
                 float xTotal = 0;
                 float yTotal = 0;
@@ -93,34 +93,34 @@ namespace kmint {
 
             // seek
                 // dom naar huidige plaats
-            kmint::math::vector2d SteeringBehaviours::seek(kmint::math::vector2d& loc, pig& owner) {
-                kmint::math::vector2d desired = normalize(loc - owner.location() * maxSpeed);
-                return (desired - velocity);
+            kmint::math::vector2d SteeringBehaviours::seek(kmint::math::vector2d& loc, MovingEntity& owner) {
+                kmint::math::vector2d desired = normalize(loc - owner.location() * owner.maxSpeed());
+                return (desired - owner.getVelocity());
             }
             // TODO
             // persuit
                 // voorspellen welke plaats
                 // hoe ver vooruit?
-            kmint::math::vector2d SteeringBehaviours::persuit(kmint::math::vector2d& loc, pig& owner) {
+            kmint::math::vector2d SteeringBehaviours::persuit(kmint::math::vector2d& loc, MovingEntity& owner) {
                 throw std::exception("implement");
             }
             // persuit
                // opposite vector of target
-            kmint::math::vector2d SteeringBehaviours::flee(kmint::math::vector2d& loc, pig& owner) {
+            kmint::math::vector2d SteeringBehaviours::flee(kmint::math::vector2d& loc, MovingEntity& owner) {
                 throw std::exception("implement");
             }
             // wander   
                 // puntje op circel, punt veranderen
-            kmint::math::vector2d SteeringBehaviours::wander(kmint::math::vector2d& loc, pig& owner) {
+            kmint::math::vector2d SteeringBehaviours::wander(kmint::math::vector2d& loc, MovingEntity& owner) {
                 float r = ((rand()) / (RAND_MAX + 1.0));
                 //first, add a small random vector to the target’s position (RandomClamped returns a value between -1 and 1)
-                wanderTarget += kmint::math::vector2d(r * wanderJitter, r * wanderJitter);
+                wanderTarget += kmint::math::vector2d(r * owner.wanderJitter(), r * owner.wanderJitter());
                 //reproject this new vector back onto a unit circle
                 normalize(wanderTarget);
                 //increase the length of the vector to the same as the radius of the wander circle
-                wanderTarget *= wanderRadius;
+                wanderTarget *= owner.wanderRadius();
                 //move the target into a position WanderDist in front of the agent
-                kmint::math::vector2d targetLocal = wanderTarget + kmint::math::vector2d(wanderDistance, 0);
+                kmint::math::vector2d targetLocal = wanderTarget + kmint::math::vector2d(owner.wanderDistance(), 0);
 
                 //project the target into world space
                 kmint::math::vector2d targetWorld = pointToWorldSpace(targetLocal,
@@ -219,17 +219,17 @@ namespace kmint {
             }
 
             // Truncated
-            kmint::math::vector2d SteeringBehaviours::calculate(pig& owner) {
+            kmint::math::vector2d SteeringBehaviours::calculate(MovingEntity& owner) {
                 math::vector2d steeringForce;
-                steeringForce += wander(owner.location(), owner) * seekWeight;
+                steeringForce += wander(owner.location(), owner) * owner.seekWeight();
                 // steeringForce += flee(owner.location(), owner) * fleeWeight;
                 // steeringForce += persuit(owner.location(), owner) * persuitWeight;
                 //// steeringForce += ObstacleAvoidance() * obstacleAvoidanceAmount
-                steeringForce += cohesion(owner) * cohesionWeight;
-                steeringForce += separation(owner) * separationWeight;
-                steeringForce += alignment(owner) * alignmentWeight;
+                steeringForce += cohesion(owner) * owner.cohesionWeight();
+                steeringForce += separation(owner) * owner.separationWeight();
+                steeringForce += alignment(owner) * owner.alignmentWeight();
 
-                return truncate(steeringForce, maxForce);
+                return truncate(steeringForce, owner.maxForce());
             }
         }
     }

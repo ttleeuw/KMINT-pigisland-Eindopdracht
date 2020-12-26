@@ -24,6 +24,7 @@ namespace kmint {
 			void setResting(bool _resting) { this->resting = _resting; }
 			bool isResting() const { return this->resting; }
 			bool shouldFlee();
+			bool shouldChase();
 			void eatPig();
 			void reset() override;
 		private:

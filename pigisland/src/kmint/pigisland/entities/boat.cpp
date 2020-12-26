@@ -9,15 +9,15 @@ namespace kmint {
         boat::boat(map::map_graph& g, map::map_node& initial_node, finitestate::ScoreCard& _scoreCard)
             : MapActor{ g, initial_node, *this, graphics::image{boat_image()} }, scoreCard(_scoreCard)
         {
-            this->stateMachine.setCurrentState(new finitestate::BoatWander, this);
-            this->stateMachine.setGlobalState(new finitestate::BoatGlobalState);
+            this->stateMachine.setCurrentState(std::make_unique<finitestate::BoatWander>(), *this);
+            this->stateMachine.setGlobalState(std::make_unique<finitestate::BoatGlobalState>(), *this);
         }
 
 
         void boat::act(delta_time dt) {
             t_passed_ += dt;
             if (to_seconds(t_passed_) >= 1) {
-                this->stateMachine.update(this);
+                this->stateMachine.update(*this);
                 t_passed_ = from_seconds(0);
             }
         }
@@ -29,8 +29,8 @@ namespace kmint {
 
         void boat::reset() {
             this->steps = 0;
-            this->stateMachine.changeState(new finitestate::BoatWander, this);
-            this->stateMachine.setGlobalState(new finitestate::BoatGlobalState);
+            this->stateMachine.changeState(std::make_unique<finitestate::BoatWander>(), *this);
+            this->stateMachine.setGlobalState(std::make_unique<finitestate::BoatGlobalState>(), *this);
         }
 
         void boat::savePig() {

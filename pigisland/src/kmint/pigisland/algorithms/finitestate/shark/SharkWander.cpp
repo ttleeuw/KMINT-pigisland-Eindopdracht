@@ -5,26 +5,20 @@
 namespace kmint {
     namespace pigisland {
         namespace finitestate {
-            void SharkWander::entry(shark* entity) { entity->setTint(kmint::graphics::color(128, 128, 255, 0)); };
-            void SharkWander::exit(shark* entity) { entity->removeTint(); };
+            void SharkWander::entry(shark& entity) { entity.setTint(kmint::graphics::color(128, 128, 255, 0)); };
+            void SharkWander::exit(shark& entity) { entity.removeTint(); };
 
-            void SharkWander::execute(shark* entity) {
-                if (entity->shouldFlee()) {
-                    entity->getStateMachine().changeState(new SharkFlee, entity);
+            void SharkWander::execute(shark& entity) {
+                if (entity.shouldFlee()) {
+                    entity.getStateMachine().changeState(std::make_unique<SharkFlee>(), entity);
                 }
-                for (std::size_t i = 0; i < entity->num_perceived_actors(); ++i) {
-                    kmint::play::actor& a = entity->perceived_actor(i);
-
-                    // TODO check boat or pig
-                    // pig;
-                        // TODO If pig hit; remove pig
-                    if (!a.removed()) {
-                        entity->getStateMachine().changeState(new SharkChase, entity);
-                        return;
-                    }
+                else if (entity.shouldChase()) {
+                    entity.getStateMachine().changeState(std::make_unique<SharkChase>(), entity);
                 }
-                entity->moveRandomly();
-                entity->eatPig();
+                else {
+                    entity.moveRandomly();
+                    entity.eatPig();
+                }
             };
 
             std::string SharkWander::toString() { return "SharkWander"; };

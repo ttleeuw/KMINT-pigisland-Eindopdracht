@@ -44,7 +44,7 @@ add_executable(pigisland
     "src/kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.cpp" 
 
     "src/kmint/pigisland/algorithms/finitestate/IState.hpp" 
-    "src/kmint/pigisland/algorithms/finitestate/IGlobalState.hpp" 
+     
     "src/kmint/pigisland/algorithms/finitestate/StateMachine.hpp"  
 
     "src/kmint/pigisland/algorithms/finitestate/scorecard/ScoreCard.hpp"
