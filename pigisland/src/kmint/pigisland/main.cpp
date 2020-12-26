@@ -13,7 +13,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "kmint/pigisland/algorithms/finitestate/scorecard/ScoreCard.hpp"
+#include "kmint/pigisland/algorithms/finitestate/scorecard/BoatDockingScoreCard.hpp"
 
 using namespace kmint;
 
@@ -32,7 +32,7 @@ int main() {
     s.build_actor<play::background>(math::size(1024, 768), graphics::image{map.background_image()});
     s.build_actor<play::map_actor>(math::vector2d{0.f, 0.f}, map.graph());
 
-    kmint::pigisland::finitestate::ScoreCard boatScoreCard{};
+    kmint::pigisland::finitestate::BoatDockingScoreCard boatScoreCard;
     pigisland::boat& boat = s.build_actor<pigisland::boat>(graph, pigisland::find_node_of_kind(graph, '1'), boatScoreCard);
 
     pigisland::shark& shark = s.build_actor<pigisland::shark>(graph, pigisland::find_node_of_kind(graph, 'K'));

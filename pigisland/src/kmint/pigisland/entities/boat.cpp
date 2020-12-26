@@ -6,7 +6,7 @@
 
 namespace kmint {
     namespace pigisland {
-        boat::boat(map::map_graph& g, map::map_node& initial_node, finitestate::ScoreCard& _scoreCard)
+        boat::boat(map::map_graph& g, map::map_node& initial_node, finitestate::BoatDockingScoreCard& _scoreCard)
             : MapActor{ g, initial_node, *this, graphics::image{boat_image()} }, scoreCard(_scoreCard)
         {
             this->stateMachine.setCurrentState(std::make_unique<finitestate::BoatWander>(), *this);
