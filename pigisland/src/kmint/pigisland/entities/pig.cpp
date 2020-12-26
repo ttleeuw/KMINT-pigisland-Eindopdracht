@@ -5,12 +5,27 @@
 namespace kmint {
     namespace pigisland {
         pig::pig(math::vector2d location)
-          : play::free_roaming_actor{location}, drawable_{*this, pig_image()} 
+          : MovingEntity(location, *this, pig_image())
         {
-			
+			mass = 1;
+			maxSpeed = 40;
+			maxForce = 100;
+			//NOTE: these weight modifiers are used to tweak
+            /* 
+            seekWeight = 35;
+            wanderWeight = 8;
+            
+            fleeWeigths
+            persuitWeight = 35;
+           
+
+            separationWeight = 10;
+            cohesionWeight = 0.125;
+            alignmentWeight = 7.5;*/
         }
 
 		void pig::move() {
+            auto x = steeringBehaviour.calculate(*this);
             steeringBehaviour.cohesion(*this);
 		}
 
