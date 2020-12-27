@@ -10,9 +10,7 @@ namespace kmint {
 	namespace pigisland {
 		class pig : public MovingEntity {
 		public:
-			  pig(math::vector2d location);
-
-			  
+				pig::pig(math::vector2d location, boat& boat, shark& shark);
 
 			  void move() override;
 

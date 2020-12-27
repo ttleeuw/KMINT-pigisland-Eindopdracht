@@ -39,7 +39,7 @@ int main() {
 
     std::vector<pigisland::pig*> pigs;
     auto locs = pigisland::random_pig_locations(100);
-    for (auto loc : locs) { pigs.push_back(&s.build_actor<pigisland::pig>(loc)); }
+    for (auto loc : locs) { pigs.push_back(&s.build_actor<pigisland::pig>(loc, boat, shark)); }
 
     // Maak een event_source aan (hieruit kun je alle events halen, zoals toetsaanslagen)
     ui::events::event_source event_source{};
@@ -62,7 +62,7 @@ int main() {
             //// TODO remove old pigs and spawn new onces
             for (auto& pig : pigs) { pig->remove(); }
             auto locs = pigisland::random_pig_locations(100);
-            for (auto loc : locs) { pigs.push_back(&s.build_actor<pigisland::pig>(loc)); }
+            for (auto loc : locs) { pigs.push_back(&s.build_actor<pigisland::pig>(loc, boat, shark)); }
         }
 
         for (ui::events::event &e : event_source) {

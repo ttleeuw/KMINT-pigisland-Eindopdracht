@@ -4,8 +4,8 @@
 
 namespace kmint {
     namespace pigisland {
-        pig::pig(math::vector2d location)
-          : MovingEntity(location, *this, pig_image())
+        pig::pig(math::vector2d location, boat& boat, shark& shark)
+          : MovingEntity(location, *this, pig_image(), boat, shark)
         {
         }
 
@@ -22,16 +22,16 @@ namespace kmint {
                 kmint::math::vector2d acceleration = steeringForce / mass();
                 //update velocity_
                 velocity += acceleration * to_seconds(dt);
+                velocity = kmint::pigisland::util::math::Util::truncate(velocity, maxSpeed());
 
-                velocity = truncate(velocity, maxSpeed());
-
-                auto x = kmint::math::vector2d{ this->location().x(), this->location().y() };
-                auto r = x + this->position;
-                this->location(r);
                 //update the position
-
                 location(location() + (velocity * to_seconds(dt)));
-
+                //update the heading if the vehicle has a non zero velocity
+                if (kmint::pigisland::util::math::Util::calcVectorLength(velocity) > 0.00000001)
+                {
+                    this->_heading = normalize(velocity);
+                    this->_side = kmint::pigisland::util::math::Util::perpendicular(this->_heading);
+                }
 
                 t_passed_ = from_seconds(0);
             }

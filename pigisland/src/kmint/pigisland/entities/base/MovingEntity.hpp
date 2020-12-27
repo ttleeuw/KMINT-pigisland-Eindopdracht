@@ -2,14 +2,18 @@
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
+#include "kmint/pigisland/util/math.hpp"
 #include "kmint/pigisland/algorithms/forcedrivenentities/SteeringBehaviours.hpp"
+
+#include "kmint/pigisland/entities/boat.hpp"
+#include "kmint/pigisland/entities/shark.hpp"
 
 namespace kmint {
 	namespace pigisland {
 		class MovingEntity : public play::free_roaming_actor {
 		public:
-			MovingEntity(math::vector2d location, play::actor const& owner, graphics::image image)
-				: play::free_roaming_actor{ location }, drawable_{ owner, image }
+			MovingEntity(math::vector2d location, play::actor const& owner, graphics::image image, boat& boat, shark& shark)
+				: play::free_roaming_actor{ location }, drawable_{ owner, image }, _fleeTarget{shark}, _persuitTarget{boat}
 			{
 			}
 
@@ -25,51 +29,9 @@ namespace kmint {
 
 			virtual void act(delta_time dt) override = 0;
 
-			kmint::math::vector2d& getTarget() { return this->target; }
-
-			void setAcceleration(math::vector2d steeringForce) {
-				acceleration = steeringForce / mass();
-			}
-
-			void setVelocity(kmint::math::vector2d v) {
-				auto l = calcVectorLength(v);
-				velocity = truncate(velocity, maxSpeed());
-			}
 			kmint::math::vector2d getVelocity() { return this->velocity; }
 
-			void setPosition(delta_time dt) {
-				position += velocity * dt.count();
-			}
-
-			double calcVectorLength(kmint::math::vector2d target) {
-				return std::sqrt(std::pow(target.x(), 2) + std::pow(target.y(), 2));
-			}
-
-			kmint::math::vector2d truncate(kmint::math::vector2d vector, float max)
-			{
-				auto length = calcVectorLength(vector);
-				if (length > max)
-				{
-					auto result = normalize(vector);
-
-					return result *= max;
-				}
-				return vector;
-			}
-
-			kmint::math::vector2d normalize(kmint::math::vector2d target)
-			{
-				double vector_length = calcVectorLength(target);
-
-				if (vector_length > std::numeric_limits<double>::epsilon())
-				{
-					target.x(target.x() / vector_length);
-					target.y(target.y() / vector_length);
-				}
-				return target;
-			}
-
-			math::vector2d side() const { return { 1.0, 0.0 }; }
+			kmint::math::vector2d getTarget() { return this->target; }
 
 			//NOTE: these weight modifiers are used to tweak
 			double wanderJitter() const { return 1; }
@@ -77,7 +39,7 @@ namespace kmint {
 			double wanderDistance() const { return 1; }
 
 			double separationWeight() const { return 1; }
-			double cohesionWeight() const { return 1; }
+			double cohesionWeight() const { return 5; }
 			double alignmentWeight() const { return 1; }
 
 			double seekWeight() const { return 1; }
@@ -87,20 +49,31 @@ namespace kmint {
 
 			float mass() const { return 1; }
 			float getForce() const { return this->force; }
-			float maxForce() const { return 4; }
+			float maxForce() const { return 10; }
 			float maxTurnRate() const { return 1; }
-			float maxSpeed() const { return 4; }
+			float maxSpeed() const { return 1; }
+
+			kmint::play::actor& persuitTarget() { return this->_persuitTarget; };
+			kmint::play::actor& fleeTarget() { return this->_fleeTarget; };
+
+			kmint::math::vector2d heading() const override { return _heading; }
+			kmint::math::vector2d side() const { return _side; }
 		protected:
-			// var
-			float force; 
+			float force;
 
-			math::vector2d acceleration; // calculated
-			math::vector2d velocity; // calculated
-			math::vector2d maxVelocity; // calculated
-			math::vector2d position; // calculated
+			kmint::math::vector2d _heading;
+			kmint::math::vector2d _side;
 
-			math::vector2d target;
+			kmint::play::actor& _persuitTarget;
+			kmint::play::actor& _fleeTarget;
+
+
+			kmint::math::vector2d velocity; // calculated
+
+
 			forcedrivenentities::SteeringBehaviours steeringBehaviour;
+
+			kmint::math::vector2d target;
 
 			delta_time t_passed_{};
 			play::image_drawable drawable_;
