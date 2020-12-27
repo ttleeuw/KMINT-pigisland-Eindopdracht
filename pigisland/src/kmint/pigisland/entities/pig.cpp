@@ -7,11 +7,10 @@ namespace kmint {
         pig::pig(math::vector2d location, boat& boat, shark& shark)
           : MovingEntity(location, *this, pig_image(), boat, shark)
         {
+            this->_heading = { random_scalar(-1, 1), random_scalar(-1, 1) };
+            this->_side = { random_scalar(-1, 1), random_scalar(-1, 1) };
+            velocity = math::vector2d(random_scalar(-0.0008, 0.0008), random_scalar(-0.0008, 0.00080));
         }
-
-		void pig::move() {
-           
-		}
 
         void pig::act(delta_time dt) {
             t_passed_ += dt;

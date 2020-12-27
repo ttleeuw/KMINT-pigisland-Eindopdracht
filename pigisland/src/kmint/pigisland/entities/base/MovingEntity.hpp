@@ -25,33 +25,30 @@ namespace kmint {
 			bool perceptive() const override { return true; }
 			scalar perception_range() const override { return 200.f; }
 
-			virtual void move() = 0;
 
 			virtual void act(delta_time dt) override = 0;
 
 			kmint::math::vector2d getVelocity() { return this->velocity; }
 
-			kmint::math::vector2d getTarget() { return this->target; }
-
 			//NOTE: these weight modifiers are used to tweak
-			double wanderJitter() const { return 1; }
-			double wanderRadius() const { return 1; }
-			double wanderDistance() const { return 1; }
+			double wanderJitter() const { return 16; }
+			double wanderRadius() const { return 16; }
+			double wanderDistance() const { return 16; }
 
 			double separationWeight() const { return 1; }
 			double cohesionWeight() const { return 5; }
-			double alignmentWeight() const { return 1; }
+			double alignmentWeight() const { return 0.1; }
 
 			double seekWeight() const { return 1; }
 			double persuitWeight() const { return 1; }
-			double wanderWeight() const { return 1; }
+			double wanderWeight() const { return 4; }
 			double fleeWeight() const { return 1; }
 
 			float mass() const { return 1; }
 			float getForce() const { return this->force; }
 			float maxForce() const { return 10; }
 			float maxTurnRate() const { return 1; }
-			float maxSpeed() const { return 1; }
+			float maxSpeed() const { return 5; }
 
 			kmint::play::actor& persuitTarget() { return this->_persuitTarget; };
 			kmint::play::actor& fleeTarget() { return this->_fleeTarget; };
@@ -72,8 +69,6 @@ namespace kmint {
 
 
 			forcedrivenentities::SteeringBehaviours steeringBehaviour;
-
-			kmint::math::vector2d target;
 
 			delta_time t_passed_{};
 			play::image_drawable drawable_;
