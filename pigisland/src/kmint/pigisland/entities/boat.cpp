@@ -28,9 +28,6 @@ namespace kmint {
         }
 
         void boat::reset() {
-            this->steps = 0;
-            this->stateMachine.changeState(std::make_unique<finitestate::BoatWander>(), *this);
-            this->stateMachine.setGlobalState(std::make_unique<finitestate::BoatGlobalState>(), *this);
         }
 
         void boat::savePig() {

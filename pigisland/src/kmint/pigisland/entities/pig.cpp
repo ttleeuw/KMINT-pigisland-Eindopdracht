@@ -1,6 +1,7 @@
 #include "kmint/pigisland/entities/pig.hpp"
 #include "kmint/pigisland/resources/resources.hpp"
 #include "kmint/random.hpp"
+#include "kmint/pigisland/util/WallFactory.hpp"
 
 namespace kmint {
     namespace pigisland {
@@ -10,6 +11,7 @@ namespace kmint {
             this->_heading = { random_scalar(-1, 1), random_scalar(-1, 1) };
             this->_side = { random_scalar(-1, 1), random_scalar(-1, 1) };
             velocity = math::vector2d(random_scalar(-0.0008, 0.0008), random_scalar(-0.0008, 0.00080));
+
         }
 
         void pig::act(delta_time dt) {

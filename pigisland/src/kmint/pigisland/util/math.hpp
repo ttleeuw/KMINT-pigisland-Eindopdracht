@@ -69,6 +69,15 @@ namespace kmint {
                         }
                         return  kmint::math::vector2d{ newX, newY };
                     }
+
+                    static double vectorDistance(const  kmint::math::vector2d& v1, const  kmint::math::vector2d& v2)
+                    {
+
+                        double ySeparation = v2.y() - v1.y();
+                        double xSeparation = v2.x() - v1.x();
+
+                        return std::sqrt(ySeparation * ySeparation + xSeparation * xSeparation);
+                    }
                 };
             }
         }

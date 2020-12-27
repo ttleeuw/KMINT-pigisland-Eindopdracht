@@ -4,7 +4,6 @@
 #include <random>
 #include <algorithm>
 
-
 namespace kmint {
     namespace pigisland {
         namespace {

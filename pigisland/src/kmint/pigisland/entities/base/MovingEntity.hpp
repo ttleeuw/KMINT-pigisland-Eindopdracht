@@ -8,14 +8,13 @@
 #include "kmint/pigisland/entities/boat.hpp"
 #include "kmint/pigisland/entities/shark.hpp"
 
+#include "kmint/pigisland/util/Wall2D.hpp"
+
 namespace kmint {
 	namespace pigisland {
 		class MovingEntity : public play::free_roaming_actor {
 		public:
-			MovingEntity(math::vector2d location, play::actor const& owner, graphics::image image, boat& boat, shark& shark)
-				: play::free_roaming_actor{ location }, drawable_{ owner, image }, _fleeTarget{shark}, _persuitTarget{boat}
-			{
-			}
+			MovingEntity(math::vector2d location, play::actor const& owner, graphics::image image, boat& boat, shark& shark);
 
 			const ui::drawable& drawable() const override { return drawable_; }
 
@@ -25,6 +24,7 @@ namespace kmint {
 			bool perceptive() const override { return true; }
 			scalar perception_range() const override { return 200.f; }
 
+			std::vector<Wall2D> getWalls() { return this->walls; };
 
 			virtual void act(delta_time dt) override = 0;
 
@@ -43,6 +43,8 @@ namespace kmint {
 			double persuitWeight() const { return 1; }
 			double wanderWeight() const { return 4; }
 			double fleeWeight() const { return 1; }
+
+			float obstacleAvoidance() const { return 1; }
 
 			float mass() const { return 1; }
 			float getForce() const { return this->force; }
@@ -64,9 +66,9 @@ namespace kmint {
 			kmint::play::actor& _persuitTarget;
 			kmint::play::actor& _fleeTarget;
 
+			kmint::math::vector2d velocity; 
 
-			kmint::math::vector2d velocity; // calculated
-
+			std::vector<Wall2D> walls;
 
 			forcedrivenentities::SteeringBehaviours steeringBehaviour;
 

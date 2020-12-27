@@ -5,8 +5,11 @@
 #include "kmint/map/map.hpp"
 #include <vector>
 
+
 namespace kmint {
 	namespace pigisland {
+		class Wall2D;
+
 		map::map map();
 		graphics::image shark_image();
 		graphics::image pig_image();
