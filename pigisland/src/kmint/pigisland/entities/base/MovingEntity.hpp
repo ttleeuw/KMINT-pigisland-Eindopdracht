@@ -9,6 +9,7 @@
 #include "kmint/pigisland/entities/shark.hpp"
 
 #include "kmint/pigisland/util/Wall2D.hpp"
+#include <kmint/pigisland/entities/properties/IProperties.hpp>
 
 namespace kmint {
 	namespace pigisland {
@@ -31,29 +32,30 @@ namespace kmint {
 			kmint::math::vector2d getVelocity() { return this->velocity; }
 
 			//NOTE: these weight modifiers are used to tweak
-			double wanderJitter() const { return 16; }
-			double wanderRadius() const { return 16; }
-			double wanderDistance() const { return 16; }
+			double wanderJitter() const { return this->properties->wanderJitter(); }
+			double wanderRadius() const { return this->properties->wanderRadius(); }
+			double wanderDistance() const { return this->properties->wanderDistance(); }
 
-			double separationWeight() const { return 1; }
-			double cohesionWeight() const { return 5; }
-			double alignmentWeight() const { return 0.1; }
+			double separationWeight() const { return this->properties->separationWeight(); }
+			double cohesionWeight() const { return this->properties->cohesionWeight(); }
+			double alignmentWeight() const { return this->properties->alignmentWeight(); }
 
-			double seekWeight() const { return 1; }
-			double persuitWeight() const { return 1; }
-			double wanderWeight() const { return 4; }
-			double fleeWeight() const { return 1; }
+			double seekWeight() const { return this->properties->seekWeight(); }
+			double persuitWeight() const { return this->properties->persuitWeight(); }
+			double wanderWeight() const { return this->properties->wanderWeight(); }
+			double fleeWeight() const { return this->properties->fleeWeight(); }
+			
+			double wallDetectionFeelerLength() const { return this->properties->wallDetectionFeelerLength(); }
+			float obstacleAvoidanceWeight() const { return this->properties->obstacleAvoidanceWeight(); }
 
-			float obstacleAvoidance() const { return 1; }
-
-			float mass() const { return 1; }
+			float mass() const { return this->properties->mass(); }
 			float getForce() const { return this->force; }
-			float maxForce() const { return 10; }
-			float maxTurnRate() const { return 1; }
-			float maxSpeed() const { return 5; }
+			float maxForce() const { return this->properties->maxForce(); }
+			float maxTurnRate() const { return this->properties->maxTurnRate(); }
+			float maxSpeed() const { return this->properties->maxSpeed(); }
 
-			kmint::play::actor& persuitTarget() { return this->_persuitTarget; };
-			kmint::play::actor& fleeTarget() { return this->_fleeTarget; };
+			kmint::play::actor& persuitTarget() const { return this->properties->persuitTarget(); };
+			kmint::play::actor& fleeTarget() const { return this->properties->fleeTarget(); };
 
 			kmint::math::vector2d heading() const override { return _heading; }
 			kmint::math::vector2d side() const { return _side; }
@@ -69,6 +71,7 @@ namespace kmint {
 			kmint::math::vector2d velocity; 
 
 			std::vector<Wall2D> walls;
+			std::unique_ptr<IProperties> properties;
 
 			forcedrivenentities::SteeringBehaviours steeringBehaviour;
 

@@ -79,10 +79,20 @@ namespace kmint {
                 for (std::size_t i = 0; i < owner.num_perceived_actors(); ++i)
                 {
                     auto& actor = owner.perceived_actor(i);
-                    if (typeid(actor) == typeid(shark)) {
-                        auto p = dynamic_cast<shark*>(&actor);
-
+                    if (typeid(actor) == typeid(owner.fleeTarget())) {
                         kmint::math::vector2d desired = normalize(owner.location() - loc) * owner.maxSpeed();
+                        return (desired - owner.getVelocity());
+                    }
+                }
+                return { 0, 0 };
+            }
+
+            kmint::math::vector2d SteeringBehaviours::persuit(kmint::math::vector2d& loc, MovingEntity& owner) {
+                for (std::size_t i = 0; i < owner.num_perceived_actors(); ++i)
+                {
+                    auto& actor = owner.perceived_actor(i);
+                    if (typeid(actor) == typeid(owner.persuitTarget())) {
+                        kmint::math::vector2d desired = normalize(loc - owner.location()) * owner.maxSpeed();
                         return (desired - owner.getVelocity());
                     }
                 }
@@ -107,7 +117,6 @@ namespace kmint {
                 );
 
                 //and steer toward it
-                // TODO
                 return targetWorld - owner.location();
             }
 
@@ -141,38 +150,6 @@ namespace kmint {
                 return r;
             }
 
-            bool SteeringBehaviours::lineIntersection2D(kmint::math::vector2d A,
-                kmint::math::vector2d B, kmint::math::vector2d C,
-                kmint::math::vector2d D, double& dist, kmint::math::vector2d& point)
-            {
-
-                double rTop = (A.y() - C.y()) * (D.x() - C.x()) - (A.x() - C.x()) * (D.y() - C.y());
-                double rBot = (B.x() - A.x()) * (D.y() - C.y()) - (B.y() - A.y()) * (D.x() - C.x());
-
-                double sTop = (A.y() - C.y()) * (B.x() - A.x()) - (A.x() - C.x()) * (B.y() - A.y());
-                double sBot = (B.x() - A.x()) * (D.y() - C.y()) - (B.y() - A.y()) * (D.x() - C.x());
-
-                if ((rBot == 0) || (sBot == 0))
-                {
-                    //lines are parallel
-                    return false;
-                }
-                double r = rTop / rBot;
-                double s = sTop / sBot;
-
-                if ((r > 0) && (r < 1) && (s > 0) && (s < 1))
-                {
-                    dist = kmint::pigisland::util::math::Util::vectorDistance(A, B) * r;
-                    point = A + r * (B - A);
-                    return true;
-                }
-                else
-                {
-                    dist = 0;
-                    return false;
-                }
-            }
-
             kmint::math::vector2d SteeringBehaviours::wallAvoidance(MovingEntity& owner) {
                 createFeelers(owner);
 
@@ -181,10 +158,7 @@ namespace kmint {
 
                 //this will hold an index into the vector of walls
                 int closestWall = -1;
-
-                kmint::math::vector2d steeringForce,
-                    point,         //used for storing temporary info
-                    closestPoint;  //holds the closest intersection point
+                kmint::math::vector2d steeringForce, point, closestPoint;  
 
                 //examine each feeler in turn
                 std::vector<Wall2D> walls = owner.getWalls();
@@ -193,118 +167,72 @@ namespace kmint {
                     //run through each wall checking for any intersection points
                     for (unsigned int w = 0; w < walls.size(); ++w)
                     {
-                        if (lineIntersection2D(owner.location(),
-                            m_Feelers[flr],
-                            walls[w].from(),
-                            walls[w].to(),
-                            distToThisIP,
-                            point))
+                        if (kmint::pigisland::util::math::Util::lineIntersection2D(owner.location(), m_Feelers[flr],  walls[w].from(), walls[w].to(), distToThisIP, point))
                         {
                             //is this the closest found so far? If so keep a record
                             if (distToThisIP < distToClosestIP)
                             {
                                 distToClosestIP = distToThisIP;
-
                                 closestWall = w;
-
                                 closestPoint = point;
                             }
                         }
-                    }//next wall
-
-
-                    //if an intersection point has been detected, calculate a force  
-                    //that will direct the agent away
-                    if (closestWall >= 0)
-                    {
-                        //calculate by what distance the projected position of the agent
-                        //will overshoot the wall
-                        kmint::math::vector2d OverShoot = m_Feelers[flr] - closestPoint;
-
-                        //create a force in the direction of the wall normal, with a 
-                        //magnitude of the overshoot
-                        steeringForce = walls[closestWall].normal() * kmint::pigisland::util::math::Util::calcVectorLength(OverShoot);
                     }
 
-                }//next feeler
+                    //if an intersection point has been detected, calculate a force that will direct the agent away
+                    if (closestWall >= 0)
+                    {
+                        //calculate by what distance the projected position of the agent will overshoot the wall
+                        kmint::math::vector2d overShoot = m_Feelers[flr] - closestPoint;
+                        //create a force in the direction of the wall normal, with a magnitude of the overshoot
+                        steeringForce = walls[closestWall].normal() * kmint::pigisland::util::math::Util::calcVectorLength(overShoot);
+                    }
+                }
 
                 return steeringForce;
             }
 
             void SteeringBehaviours::createFeelers(MovingEntity& owner)
             {
-                // TODO get from owner
-                int m_dWallDetectionFeelerLength = 12;
-
                 //feeler pointing straight in front
-                m_Feelers[0] = owner.location() + m_dWallDetectionFeelerLength * owner.heading();
-
+                m_Feelers[0] = owner.location() + owner.wallDetectionFeelerLength() * owner.heading();
 
                 //feeler to left
                 kmint::math::vector2d temp = owner.heading();
 
-                float a = HALF_PI * 3.5f;
-
-                kmint::math::matrix<float> r1{ 3, 3 };
-                r1(0, 0) = std::cosf(a * (PI / 180));   r1(0, 1) = std::sinf(a * (PI / 180));   r1(0, 2) = 0;
-                r1(1, 0) = -std::sinf(a * (PI / 180));  r1(1, 1) = std::cosf(a * (PI / 180));   r1(1, 2) = 0;
-                r1(2, 0) = 0;                           r1(2, 1) = 0;                           r1(2, 2) = 1;
-
-                kmint::math::matrix<float> t1{ 3, 3 };
-                t1(0, 0) = 1;  t1(0, 1) = 0;    t1(0, 2) = temp.x();
-                t1(1, 0) = 0;  t1(1, 1) = 1;    t1(1, 2) = temp.y();
-                t1(2, 0) = 0;  t1(2, 1) = 0;    t1(2, 2) = 1;
-
-                kmint::math::matrix<float> t2{ 3, 3 };
-                t2(0, 0) = 1;  t2(0, 1) = 0;    t2(0, 2) = -temp.x();
-                t2(1, 0) = 0;  t2(1, 1) = 1;    t2(1, 2) = -temp.y();
-                t2(2, 0) = 0;  t2(2, 1) = 0;    t2(2, 2) = 1;
-
+                kmint::math::matrix<float> r1 = kmint::pigisland::util::math::Util::createRotationMatrix(HALF_PI * 3.5f);
+                kmint::math::matrix<float> t1 = kmint::pigisland::util::math::Util::createTransformMatrix(temp.x(), temp.y());
+                kmint::math::matrix<float> t2 = kmint::pigisland::util::math::Util::createTransformMatrix(-temp.x(), -temp.y());
 
                 temp = kmint::pigisland::util::math::Util::multiply(t1, temp);
                 temp = kmint::pigisland::util::math::Util::multiply(r1, temp);
                 temp = kmint::pigisland::util::math::Util::multiply(t2, temp);
 
-
-                m_Feelers[1] = owner.location() + m_dWallDetectionFeelerLength / 2.0f * temp;
+                m_Feelers[1] = owner.location() + owner.wallDetectionFeelerLength() / 2.0f * temp;
 
                 //feeler to right
                 temp = owner.heading();
 
-                a = HALF_PI * 0.5f;
-
-                r1 = { 3, 3 };
-                r1(0, 0) = std::cosf(a * (PI / 180));   r1(0, 1) = std::sinf(a * (PI / 180));   r1(0, 2) = 0;
-                r1(1, 0) = -std::sinf(a * (PI / 180));  r1(1, 1) = std::cosf(a * (PI / 180));   r1(1, 2) = 0;
-                r1(2, 0) = 0;                           r1(2, 1) = 0;                           r1(2, 2) = 1;
-
-                t1 = { 3, 3 };
-                t1(0, 0) = 1;  t1(0, 1) = 0;    t1(0, 2) = temp.x();
-                t1(1, 0) = 0;  t1(1, 1) = 1;    t1(1, 2) = temp.y();
-                t1(2, 0) = 0;  t1(2, 1) = 0;    t1(2, 2) = 1;
-
-                t2 = { 3, 3 };
-                t2(0, 0) = 1;  t2(0, 1) = 0;    t2(0, 2) = -temp.x();
-                t2(1, 0) = 0;  t2(1, 1) = 1;    t2(1, 2) = -temp.y();
-                t2(2, 0) = 0;  t2(2, 1) = 0;    t2(2, 2) = 1;
-
+                r1 = kmint::pigisland::util::math::Util::createRotationMatrix(HALF_PI * 0.5f);
+                t1 = kmint::pigisland::util::math::Util::createTransformMatrix(temp.x(), temp.y());
+                t2 = kmint::pigisland::util::math::Util::createTransformMatrix(-temp.x(), -temp.y());
 
                 temp = kmint::pigisland::util::math::Util::multiply(t1, temp);
                 temp = kmint::pigisland::util::math::Util::multiply(r1, temp);
                 temp = kmint::pigisland::util::math::Util::multiply(t2, temp);
 
-
-                m_Feelers[2] = owner.location() + m_dWallDetectionFeelerLength / 2.0f * temp;
+                m_Feelers[2] = owner.location() + owner.wallDetectionFeelerLength() / 2.0f * temp;
             }
 
             // Truncated
             kmint::math::vector2d SteeringBehaviours::calculate(MovingEntity& owner) {
                 math::vector2d steeringForce;
+                // TODO wander
                 //steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
                 steeringForce += flee(owner.fleeTarget().location(), owner) * owner.fleeWeight();
-                //steeringForce += seek(owner.persuitTarget().location(), owner) * owner.persuitWeight();
-                steeringForce += wallAvoidance(owner) * owner.obstacleAvoidance();
-                //steeringForce += cohesion(owner) * owner.cohesionWeight();
+                steeringForce += persuit(owner.persuitTarget().location(), owner) * owner.persuitWeight();
+                steeringForce += wallAvoidance(owner) * owner.obstacleAvoidanceWeight();
+                steeringForce += cohesion(owner) * owner.cohesionWeight();
                 steeringForce += separation(owner) * owner.separationWeight();
                 steeringForce += alignment(owner) * owner.alignmentWeight();
 

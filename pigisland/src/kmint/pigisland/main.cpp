@@ -49,7 +49,7 @@ int main() {
     // main_loop stuurt alle actors aan.
     main_loop(s, window, [&](delta_time dt, loop_controls &ctl) {
         if (first) {
-            ctl.time_scale *= 40.0;
+           // ctl.time_scale *= 40.0;
             first = false;
         }
 
@@ -59,7 +59,8 @@ int main() {
             shark.reset();
             boat.reset();
 
-            //// TODO remove old pigs and spawn new onces
+            // TODO remove old pigs and spawn new onces
+            // TODO crashes
              /*
              for (auto& pig : pigs) { pig->remove(); }
             auto locs = pigisland::random_pig_locations(100);

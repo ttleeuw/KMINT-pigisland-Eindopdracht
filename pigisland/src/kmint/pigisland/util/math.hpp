@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <numeric>
 #include <cmath>
+#define PI 3.14159
 
 namespace kmint {
     namespace pigisland {
@@ -77,6 +78,50 @@ namespace kmint {
                         double xSeparation = v2.x() - v1.x();
 
                         return std::sqrt(ySeparation * ySeparation + xSeparation * xSeparation);
+                    }
+
+                    static kmint::math::matrix<float> createRotationMatrix(float a) {
+                        kmint::math::matrix<float> r1{ 3, 3 };
+                        r1(0, 0) = std::cosf(a * (PI / 180));   r1(0, 1) = std::sinf(a * (PI / 180));   r1(0, 2) = 0;
+                        r1(1, 0) = -std::sinf(a * (PI / 180));  r1(1, 1) = std::cosf(a * (PI / 180));   r1(1, 2) = 0;
+                        r1(2, 0) = 0;                           r1(2, 1) = 0;                           r1(2, 2) = 1;
+                        return r1;
+                    }
+
+                    static kmint::math::matrix<float> createTransformMatrix(float x, float y) {
+                        kmint::math::matrix<float> t1{ 3, 3 };
+                        t1(0, 0) = 1;  t1(0, 1) = 0;    t1(0, 2) = x;
+                        t1(1, 0) = 0;  t1(1, 1) = 1;    t1(1, 2) = y;
+                        t1(2, 0) = 0;  t1(2, 1) = 0;    t1(2, 2) = 1;
+                        return t1;
+                    }
+
+                    static bool lineIntersection2D(kmint::math::vector2d A, kmint::math::vector2d B, kmint::math::vector2d C, kmint::math::vector2d D, double& dist, kmint::math::vector2d& point)
+                    {
+
+                        double rTop = (A.y() - C.y()) * (D.x() - C.x()) - (A.x() - C.x()) * (D.y() - C.y());
+                        double rBot = (B.x() - A.x()) * (D.y() - C.y()) - (B.y() - A.y()) * (D.x() - C.x());
+
+                        double sTop = (A.y() - C.y()) * (B.x() - A.x()) - (A.x() - C.x()) * (B.y() - A.y());
+                        double sBot = (B.x() - A.x()) * (D.y() - C.y()) - (B.y() - A.y()) * (D.x() - C.x());
+
+                        //lines are parallel
+                        if ((rBot == 0) || (sBot == 0)) return false;
+
+                        double r = rTop / rBot;
+                        double s = sTop / sBot;
+
+                        if ((r > 0) && (r < 1) && (s > 0) && (s < 1))
+                        {
+                            dist = kmint::pigisland::util::math::Util::vectorDistance(A, B) * r;
+                            point = A + r * (B - A);
+                            return true;
+                        }
+                        else
+                        {
+                            dist = 0;
+                            return false;
+                        }
                     }
                 };
             }

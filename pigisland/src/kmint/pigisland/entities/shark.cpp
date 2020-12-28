@@ -39,7 +39,7 @@ namespace kmint {
             for (std::size_t i = 0; i < this->num_perceived_actors(); ++i) {
                 kmint::play::actor& a = this->perceived_actor(i);
 
-                if (!a.removed() && typeid(actor) == typeid(pig)) {
+                if (!a.removed()) {
                     return true;
                 }
             }
