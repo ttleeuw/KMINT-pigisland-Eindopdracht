@@ -1,10 +1,17 @@
 #pragma once
 #include <vector>
+#include <filesystem>
 #include "kmint/play/stage.hpp"
 #include "kmint/pigisland/entities/shark.hpp"
 #include "kmint/pigisland/entities/boat.hpp"
 #include "kmint/pigisland/entities/pig.hpp"
 #include "kmint/pigisland/algorithms/geneticalgorithm/GeneticScoreCard.hpp"
+#include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <sstream>
+#include <string>
 
 namespace kmint
 {
@@ -17,104 +24,92 @@ namespace kmint
 			private:
 				std::vector<std::reference_wrapper<pig>> pigs;
 				play::stage& stage;
-				GeneticScoreCard& scoreCard;
+				GeneticScoreCard& scorecard;
 			public:
-				GeneticAlgorithm(play::stage& s, GeneticScoreCard& sc) : stage(s), scoreCard(sc) { }
+				GeneticAlgorithm(play::stage& s, GeneticScoreCard& sc) : stage(s), scorecard(sc) { }
 
 				void create_generation_0(shark& shark, boat& boat)
 				{
 					std::vector<pig*> m;
 					auto locs = pigisland::random_pig_locations(100);
-					for (auto loc : locs) {
-						pig& p = stage.build_actor<pigisland::pig>(loc, boat, shark, Chromosome{});
-						pigs.push_back(p);
+					for (auto loc : locs) { pigs.push_back(stage.build_actor<pigisland::pig>(loc, boat, shark, Chromosome{})); }
+				}
+
+				void new_generation(shark& shark, boat& boat) {
+					// Fitness
+					std::vector<Chromosome> newGenChromosomes;
+					for (Chromosome& chromosome : scorecard.getSavedChromosomes()) { newGenChromosomes.push_back(chromosome); }
+
+					// Initialize new population
+					std::vector<play::actor*> alivePigs{};
+					for (play::actor& actor : stage)
+					{
+						if (typeid(actor) == typeid(pig))
+							alivePigs.push_back(&actor);
+					}
+
+					crossOver(scorecard.getSavedChromosomes(), alivePigs, newGenChromosomes);
+					mutate(newGenChromosomes);
+
+					// Repopulate
+					for (auto actor : alivePigs) { stage.remove_actor(*actor); }
+					alivePigs.clear();
+					auto locs = pigisland::random_pig_locations(100);
+					for (auto loc : locs) { pigs.push_back(stage.build_actor<pigisland::pig>(loc, boat, shark, Chromosome{})); }
+
+					scorecard.resetChromosomes();
+				}
+
+				void crossOver(std::vector<Chromosome>& fittest, std::vector<play::actor*>& alivePigs, std::vector<Chromosome>& newGenChromosomes) {
+					const int number_of_pigs_to_generate = 100 - fittest.size();
+					// Crossover
+					for (int i = 0; i < number_of_pigs_to_generate; ++i)
+					{
+						Chromosome firstParent;
+
+						if (!fittest.empty())
+						{
+							firstParent = fittest[random_int(0, fittest.size())];
+						}
+						else
+						{
+							firstParent = dynamic_cast<pigisland::pig*>(alivePigs[random_int(0, alivePigs.size())])->getChromosome();
+						}
+
+						Chromosome secondParent;
+						if (!alivePigs.empty())
+						{
+							secondParent = dynamic_cast<pigisland::pig*>(alivePigs[random_int(0, alivePigs.size())])->getChromosome();
+						}
+						else
+						{
+							secondParent = fittest[random_int(0, fittest.size())];
+						}
+
+						const int splicePoint = random_int(1, 4);
+						Chromosome child;
+
+						for (int a = 0; a < splicePoint; ++a)
+						{
+							child.get()[a] = firstParent.get()[a];
+						}
+						for (int b = splicePoint; b < secondParent.get().size(); ++b)
+						{
+							child.get()[b] = secondParent.get()[b];
+						}
+
+						newGenChromosomes.push_back(child);
 					}
 				}
 
-				void new_generation(shark& shark, boat& boat, GeneticScoreCard& scorecard) {
-					std::vector<Chromosome> new_generation_chromosomes;
-
-					//Pigs that got saved are automatically added to new generation because of elitism
-					for (Chromosome& ch : scorecard.getSavedChromosomes())
+				void mutate(std::vector<Chromosome>& newGenChromosomes) {
+					if (random_int(0, 1000) == 190)
 					{
-						new_generation_chromosomes.push_back(ch);
+						const int randomGene = random_int(0, 5);
+						// Check wheter scalar can be < 0 
+						randomGene <= 1 ? newGenChromosomes.at(random_int(0, 100)).get().at(randomGene) = random_scalar(-1.0f, 1.0f) :
+							newGenChromosomes.at(random_int(0, 100)).get().at(randomGene) = random_scalar(0.0f, 1.0f);
 					}
-
-					const int number_of_pigs_to_generate = 100 - scorecard.getSavedChromosomes().size();
-
-					//Get left over pigs
-					std::vector<play::actor*> left_over_pigs{};
-					for (play::actor& a : stage)
-					{
-						if (typeid(a) == typeid(pig))
-							left_over_pigs.push_back(&a);
-					}
-
-					//If the shark ate all the pigs -> restart
-					if (left_over_pigs.empty() && scorecard.getSavedChromosomes().empty())
-					{
-						create_generation_0(shark, boat);
-						return;
-					}
-
-					//Fitness = boat reached is good
-					//Get a parent from the boat and pair it with a left over pig(left over pig survived too so should have something good(or luck))
-					for (int i = 0; i < number_of_pigs_to_generate; ++i)
-					{
-						Chromosome random_parent_a;
-						Chromosome random_parent_b;
-
-						if (!scorecard.getSavedChromosomes().empty())
-							random_parent_a = scorecard.getSavedChromosomes().at(random_int(0, scorecard.getSavedChromosomes().size()));
-						else
-							random_parent_a = dynamic_cast<pigisland::pig*>(left_over_pigs.at(random_int(0, left_over_pigs.size())))->getChromosome();
-
-						if (!left_over_pigs.empty())
-							random_parent_b = dynamic_cast<pigisland::pig*>(left_over_pigs.at(random_int(0, left_over_pigs.size())))->getChromosome();
-						else
-							random_parent_b = scorecard.getSavedChromosomes().at(random_int(0, scorecard.getSavedChromosomes().size()));
-
-						const int splice_point = random_int(1, 5);
-						Chromosome child{};
-
-						for (int j = 0; j < splice_point; ++j)
-						{
-							child.get().at(j) = random_parent_a.get().at(j);
-						}
-						for (int k = splice_point; k < 5; ++k)
-						{
-							child.get().at(k) = random_parent_b.get().at(k);
-						}
-
-						new_generation_chromosomes.push_back(child);
-					}
-
-					//Mutate one child with a chance of 1/100.
-					if (random_int(0, 100) == 67)
-					{
-						const int random_child = random_int(0, 100);
-						const int random_gene = random_int(0, 5);
-
-						if (random_gene > 1)
-							new_generation_chromosomes.at(random_child).get().at(random_gene) = random_scalar(0.0f, 1.0f);
-						else
-							new_generation_chromosomes.at(random_child).get().at(random_gene) = random_scalar(-1.0f, 1.0f);
-					}
-
-					//Remove old still living pigs
-					for (auto actor : left_over_pigs)
-					{
-						stage.remove_actor(*actor);
-					}
-					left_over_pigs.clear();
-
-					//Build new generation
-					auto locs = pigisland::random_pig_locations(100);
-					for (auto loc : locs) {
-						pigs.push_back(stage.build_actor<pigisland::pig>(loc, boat, shark, Chromosome{}));
-					}
-
-					// TODO reset saved chromosomes
 				}
 			};
 		}

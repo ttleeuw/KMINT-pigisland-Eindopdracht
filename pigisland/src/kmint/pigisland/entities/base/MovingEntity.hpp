@@ -41,7 +41,6 @@ namespace kmint {
 			double alignmentWeight() const { return this->properties->alignmentWeight(); }
 
 			double seekWeight() const { return this->properties->seekWeight(); }
-			double persuitWeight() const { return this->properties->persuitWeight(); }
 			double wanderWeight() const { return this->properties->wanderWeight(); }
 			double fleeWeight() const { return this->properties->fleeWeight(); }
 			

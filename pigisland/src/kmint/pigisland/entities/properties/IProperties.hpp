@@ -15,7 +15,6 @@ namespace kmint {
 			virtual double alignmentWeight() const = 0;
 
 			virtual double seekWeight() const = 0;
-			virtual double persuitWeight() const = 0;
 			virtual double wanderWeight() const = 0;
 			virtual double fleeWeight() const = 0;
 

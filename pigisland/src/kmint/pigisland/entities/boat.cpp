@@ -12,7 +12,12 @@ namespace kmint {
             this->stateMachine.setCurrentState(std::make_unique<finitestate::BoatWander>(), *this);
             this->stateMachine.setGlobalState(std::make_unique<finitestate::BoatGlobalState>(), *this);
         }
-
+        boat::boat(map::map_graph& g, map::map_node& initial_node, finitestate::BoatDockingScoreCard& _scoreCard, geneticalgorithm::GeneticScoreCard& _geneticScoreCard)
+            : MapActor{ g, initial_node, *this, graphics::image{boat_image()} }, scoreCard(_scoreCard), geneticScoreCard{ &_geneticScoreCard }
+        {
+            this->stateMachine.setCurrentState(std::make_unique<finitestate::BoatWander>(), *this);
+            this->stateMachine.setGlobalState(std::make_unique<finitestate::BoatGlobalState>(), *this);
+        }
 
         void boat::act(delta_time dt) {
             t_passed_ += dt;
@@ -34,6 +39,8 @@ namespace kmint {
             {
                 auto& actor = this->colliding_actor(i);
                 if (typeid(actor) == typeid(pig)) {
+                    auto p = dynamic_cast<pig*>(&actor);
+                    if (geneticScoreCard) geneticScoreCard->saveChromosome(p->getChromosome());
                     actor.remove();
                 }
             }

@@ -10,12 +10,14 @@
 #include "kmint/pigisland/algorithms/finitestate/boat/BoatGlobalState.hpp"
 #include "kmint/pigisland/algorithms/finitestate/scorecard/BoatDockingScoreCard.hpp"
 #include "kmint/pigisland/entities/DockingStation.hpp"
+#include "kmint/pigisland/algorithms/geneticalgorithm/GeneticScoreCard.hpp"
 
 namespace kmint {
 	namespace pigisland {
 		class boat : public MapActor {
 		public:
 			boat(map::map_graph& g, map::map_node& initial_node, finitestate::BoatDockingScoreCard& _scoreCard);
+			boat(map::map_graph& g, map::map_node& initial_node, finitestate::BoatDockingScoreCard& _scoreCard, geneticalgorithm::GeneticScoreCard& _geneticScoreCard);
 			
 			void act(delta_time dt) override;
 
@@ -32,6 +34,7 @@ namespace kmint {
 
 			void reset() override;
 		private:
+			geneticalgorithm::GeneticScoreCard* geneticScoreCard = nullptr;
 			finitestate::StateMachine<boat> stateMachine;
 			finitestate::BoatDockingScoreCard& scoreCard;
 		};

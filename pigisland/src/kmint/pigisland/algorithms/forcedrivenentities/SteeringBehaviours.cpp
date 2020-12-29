@@ -234,7 +234,7 @@ namespace kmint {
                 math::vector2d steeringForce;
                 steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
                 steeringForce += flee(owner.fleeTarget().location(), owner) * owner.fleeWeight();
-                steeringForce += persuit(owner.persuitTarget().location(), owner) * owner.persuitWeight();
+                steeringForce += persuit(owner.persuitTarget().location(), owner) * owner.seekWeight();
                 steeringForce += wallAvoidance(owner) * owner.obstacleAvoidanceWeight();
                 steeringForce += cohesion(owner) * owner.cohesionWeight();
                 steeringForce += separation(owner) * owner.separationWeight();

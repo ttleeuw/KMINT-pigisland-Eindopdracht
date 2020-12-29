@@ -16,25 +16,25 @@ void Program::run() {
     stage.build_actor<kmint::play::map_actor>(kmint::math::vector2d{ 0.f, 0.f }, map.graph());
 
     kmint::pigisland::finitestate::BoatDockingScoreCard boatScoreCard;
-    kmint::pigisland::boat& boat = stage.build_actor<kmint::pigisland::boat>(graph, kmint::pigisland::find_node_of_kind(graph, '1'), boatScoreCard);
     kmint::pigisland::shark& shark = stage.build_actor<kmint::pigisland::shark>(graph, kmint::pigisland::find_node_of_kind(graph, 'K'));
 
-    
+    bool useGeneticAlgorithm = true;
+    kmint::pigisland::geneticalgorithm::GeneticScoreCard geneticScorecard;
+    kmint::pigisland::geneticalgorithm::GeneticAlgorithm geneticAlgorithm{ stage, geneticScorecard };
 
+    kmint::pigisland::boat* b;
 
-    bool useGeneticAlgorithm = false;
     std::vector<kmint::pigisland::pig*> pigs;
     if (!useGeneticAlgorithm) {
+        b = &stage.build_actor<kmint::pigisland::boat>(graph, kmint::pigisland::find_node_of_kind(graph, '1'), boatScoreCard);
         auto locs = kmint::pigisland::random_pig_locations(100);
-        for (auto loc : locs) { pigs.push_back(&stage.build_actor<kmint::pigisland::pig>(loc, boat, shark)); }
-
+        for (auto loc : locs) { pigs.push_back(&stage.build_actor<kmint::pigisland::pig>(loc, *b, shark)); }
     }
     else {
-        kmint::pigisland::geneticalgorithm::GeneticScoreCard geneticScorecard;
-        kmint::pigisland::geneticalgorithm::GeneticAlgorithm geneticAlgorithm{ stage, geneticScorecard };
-        geneticAlgorithm.create_generation_0(shark, boat);
+        b = &stage.build_actor<kmint::pigisland::boat>(graph, kmint::pigisland::find_node_of_kind(graph, '1'), boatScoreCard, geneticScorecard);
+        geneticAlgorithm.create_generation_0(shark, *b);
     }
-
+    kmint::pigisland::boat& boat = *b;
     // Maak een event_source aan (hieruit kun je alle events halen, zoals toetsaanslagen)
     kmint::ui::events::event_source event_source{};
 
@@ -57,16 +57,14 @@ void Program::run() {
                     stage.remove_actor(*actor);
                 }
                 pigs.clear();
-                //left_over_pigs.clear();
 
-                ////Build new generation
                 auto locs = kmint::pigisland::random_pig_locations(100);
                 for (auto loc : locs) {
                     pigs.push_back(&stage.build_actor<kmint::pigisland::pig>(loc, boat, shark));
                 }
             }
             else {
-
+                geneticAlgorithm.new_generation(shark, boat);
             }
             // TODO remove old pigs and spawn new onces
             // TODO crashes

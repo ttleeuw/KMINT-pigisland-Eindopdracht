@@ -20,7 +20,6 @@ namespace kmint {
 			double alignmentWeight() const override { return 0.1; };
 
 			double seekWeight() const override { return 1; }
-			double persuitWeight() const override { return 1; }
 			double wanderWeight() const override { return 1; }
 			double fleeWeight() const override { return 1; }
 
