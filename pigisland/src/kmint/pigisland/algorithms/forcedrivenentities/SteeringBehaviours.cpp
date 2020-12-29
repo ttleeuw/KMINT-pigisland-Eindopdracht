@@ -100,6 +100,10 @@ namespace kmint {
             }
 
             kmint::math::vector2d SteeringBehaviours::wander(kmint::math::vector2d& loc, MovingEntity& owner) {
+                auto rotation = kmint::pigisland::util::math::Util::createRotationMatrix(random_scalar(-1, 1));
+                return  kmint::pigisland::util::math::Util::multiply(rotation, owner.heading());
+
+                // TODO wander
                 //first, add a small random vector to the target’s position (RandomClamped returns a value between -1 and 1)
                 wanderTarget += kmint::math::vector2d(random_scalar(-1, 1) * owner.wanderJitter(), random_scalar(-1, 1) * owner.wanderJitter());
                 //reproject this new vector back onto a unit circle
@@ -143,11 +147,12 @@ namespace kmint {
                 m3(1, 0) = 0;                   m3(1, 1) = 1;                   m3(1, 2) = 0;
                 m3(2, 0) = 0;                   m3(2, 1) = 0;                   m3(2, 2) = 1;
 
+                auto newV = kmint::pigisland::util::math::Util::multiply(kmint::pigisland::util::math::Util::multiply(kmint::pigisland::util::math::Util::multiply(m1, m2), m3), f);
                 auto newM = kmint::pigisland::util::math::Util::multiply(m3, m2);
-                auto Mr = kmint::pigisland::util::math::Util::multiply(newM, m1);
+                auto Mr = kmint::pigisland::util::math::Util::multiply(m3, newM);
                 
                 auto r = kmint::pigisland::util::math::Util::multiply(Mr, f);
-                return r;
+                return newV;
             }
 
             kmint::math::vector2d SteeringBehaviours::wallAvoidance(MovingEntity& owner) {
@@ -227,8 +232,7 @@ namespace kmint {
             // Truncated
             kmint::math::vector2d SteeringBehaviours::calculate(MovingEntity& owner) {
                 math::vector2d steeringForce;
-                // TODO wander
-                //steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
+                steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
                 steeringForce += flee(owner.fleeTarget().location(), owner) * owner.fleeWeight();
                 steeringForce += persuit(owner.persuitTarget().location(), owner) * owner.persuitWeight();
                 steeringForce += wallAvoidance(owner) * owner.obstacleAvoidanceWeight();

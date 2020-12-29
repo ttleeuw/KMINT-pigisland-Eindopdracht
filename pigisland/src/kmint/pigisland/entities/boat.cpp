@@ -27,8 +27,7 @@ namespace kmint {
             steps -= repairValue;
         }
 
-        void boat::reset() {
-        }
+        void boat::reset() { }
 
         void boat::savePig() {
             for (std::size_t i = 0; i < this->num_colliding_actors(); ++i)
