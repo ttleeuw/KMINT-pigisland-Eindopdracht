@@ -18,9 +18,9 @@ namespace kmint {
             public:
                 virtual ~SharkFlee() {}
 
-                void entry(shark* entity) override;
-                void execute(shark* entity) override;
-                void exit(shark* entity) override;
+                void entry(shark& entity) override;
+                void execute(shark& entity) override;
+                void exit(shark& entity) override;
 
                 std::string toString() override;
             };

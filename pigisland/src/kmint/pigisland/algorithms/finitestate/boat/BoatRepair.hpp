@@ -21,9 +21,9 @@ namespace kmint {
             public:
                 ~BoatRepair() {}
 
-                void entry(boat* entity) override;
-                void execute(boat* entity) override;
-                void exit(boat* entity) override;
+                void entry(boat& entity) override;
+                void execute(boat& entity) override;
+                void exit(boat& entity) override;
 
                 std::string toString() override;
             private:

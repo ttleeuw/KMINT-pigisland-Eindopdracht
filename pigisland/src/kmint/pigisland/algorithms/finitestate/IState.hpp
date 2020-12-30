@@ -10,9 +10,9 @@ namespace kmint {
             public:
                 virtual ~IState() = default;
 
-                virtual void entry(T* entity) = 0;
-                virtual void execute(T* entity) = 0;
-                virtual void exit(T* entity) = 0;
+                virtual void entry(T& entity) = 0;
+                virtual void execute(T& entity) = 0;
+                virtual void exit(T& entity) = 0;
 
                 virtual std::string toString() = 0;
             };

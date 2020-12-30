@@ -4,14 +4,14 @@
 namespace kmint {
     namespace pigisland {
         namespace finitestate {
-            void SharkFlee::entry(shark* entity) { entity->setTint(kmint::graphics::color(25, 255, 140, 0)); };
-            void SharkFlee::exit(shark* entity) { entity->removeTint(); };
+            void SharkFlee::entry(shark& entity) { entity.setTint(kmint::graphics::color(25, 255, 140, 0)); };
+            void SharkFlee::exit(shark& entity) { entity.removeTint(); };
 
-            void SharkFlee::execute(shark* entity) {
-                entity->moveRandomly();
+            void SharkFlee::execute(shark& entity) {
+                entity.moveRandomly();
                 steps++;
                 if (steps == MAX_STEPS) {
-                    entity->getStateMachine().changeState(new SharkWander, entity);
+                    entity.getStateMachine().changeState(std::make_unique<SharkWander>(), entity);
                 }
             };
 

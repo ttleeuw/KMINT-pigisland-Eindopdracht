@@ -5,16 +5,19 @@
 #include <tuple>
 #include <vector>
 #include "kmint/pigisland/entities/base/MovingEntity.hpp"
+#include <kmint/pigisland/algorithms/geneticalgorithm/Chromosome.hpp>
 
 namespace kmint {
 	namespace pigisland {
 		class pig : public MovingEntity {
+		private:
+			geneticalgorithm::Chromosome chromosome;
 		public:
-			  pig(math::vector2d location);
+			pig::pig(math::vector2d location, boat& boat, shark& shark);
+			pig::pig(math::vector2d location, boat& boat, shark& shark, geneticalgorithm::Chromosome chromosome);
 
-			  void move() override;
-
-			  void act(delta_time dt) override;
+			void act(delta_time dt) override;
+			geneticalgorithm::Chromosome& getChromosome() { return chromosome; }
 		};
 	} 
 } 
