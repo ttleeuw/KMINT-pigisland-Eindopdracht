@@ -240,7 +240,8 @@ namespace kmint {
                 steeringForce += separation(owner) * owner.separationWeight();
                 steeringForce += alignment(owner) * owner.alignmentWeight();
 
-                return steeringForce;
+                //return steeringForce;
+                return kmint::pigisland::util::math::Util::truncate(steeringForce, owner.maxTurnRate());
             }
         }
     }
