@@ -100,8 +100,8 @@ namespace kmint {
             }
 
             kmint::math::vector2d SteeringBehaviours::wander(kmint::math::vector2d& loc, MovingEntity& owner) {
-                auto rotation = kmint::pigisland::util::math::Util::createRotationMatrix(random_scalar(-1, 1));
-                return  kmint::pigisland::util::math::Util::multiply(rotation, owner.heading());
+                /*auto rotation = kmint::pigisland::util::math::Util::createRotationMatrix(random_scalar(-1, 1));
+                return  kmint::pigisland::util::math::Util::multiply(rotation, owner.heading());*/
 
                 // TODO wander
                 //first, add a small random vector to the target’s position (RandomClamped returns a value between -1 and 1)
@@ -121,7 +121,7 @@ namespace kmint {
                 );
 
                 //and steer toward it
-                return targetWorld - owner.location();
+                return normalize(targetWorld);
             }
 
             kmint::math::vector2d SteeringBehaviours::pointToWorldSpace(const kmint::math::vector2d& point,
