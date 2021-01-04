@@ -27,8 +27,8 @@ private:
     // maak een podium aan
     kmint::play::stage stage{ {1024, 768} };
 public:
-	void initGenetic();
-	void initDefault();
+	void runGenetic();
+	void runDefault();
 
 	void run();
 };
