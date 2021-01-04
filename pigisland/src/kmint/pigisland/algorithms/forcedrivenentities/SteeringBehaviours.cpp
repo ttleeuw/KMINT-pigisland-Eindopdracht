@@ -87,11 +87,11 @@ namespace kmint {
                 return { 0, 0 };
             }
 
-            kmint::math::vector2d SteeringBehaviours::persuit(kmint::math::vector2d& loc, MovingEntity& owner) {
+            kmint::math::vector2d SteeringBehaviours::pursuit(kmint::math::vector2d& loc, MovingEntity& owner) {
                 for (std::size_t i = 0; i < owner.num_perceived_actors(); ++i)
                 {
                     auto& actor = owner.perceived_actor(i);
-                    if (typeid(actor) == typeid(owner.persuitTarget())) {
+                    if (typeid(actor) == typeid(owner.pursuitTarget())) {
                         kmint::math::vector2d desired = normalize(loc - owner.location()) * owner.maxSpeed();
                         return (desired - owner.getVelocity());
                     }
@@ -100,14 +100,10 @@ namespace kmint {
             }
 
             kmint::math::vector2d SteeringBehaviours::wander(kmint::math::vector2d& loc, MovingEntity& owner) {
-                /*auto rotation = kmint::pigisland::util::math::Util::createRotationMatrix(random_scalar(-1, 1));
-                return  kmint::pigisland::util::math::Util::multiply(rotation, owner.heading());*/
-
-                // TODO wander
                 //first, add a small random vector to the target’s position (RandomClamped returns a value between -1 and 1)
                 wanderTarget += kmint::math::vector2d(random_scalar(-1, 1) * owner.wanderJitter(), random_scalar(-1, 1) * owner.wanderJitter());
                 //reproject this new vector back onto a unit circle
-                auto normalizedTarget = normalize(wanderTarget);
+                auto normalizedTarget = wanderTarget;
                 //increase the length of the vector to the same as the radius of the wander circle
                 normalizedTarget *= owner.wanderRadius();
                 //move the target into a position WanderDist in front of the agent
@@ -232,9 +228,9 @@ namespace kmint {
             // Truncated
             kmint::math::vector2d SteeringBehaviours::calculate(MovingEntity& owner) {
                 math::vector2d steeringForce;
-                steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
+                //steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
                 steeringForce += flee(owner.fleeTarget().location(), owner) * owner.fleeWeight();
-                steeringForce += persuit(owner.persuitTarget().location(), owner) * owner.seekWeight();
+                steeringForce += pursuit(owner.pursuitTarget().location(), owner) * owner.seekWeight();
                 steeringForce += wallAvoidance(owner) * owner.obstacleAvoidanceWeight();
                 steeringForce += cohesion(owner) * owner.cohesionWeight();
                 steeringForce += separation(owner) * owner.separationWeight();

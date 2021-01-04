@@ -53,7 +53,7 @@ namespace kmint {
 			float maxTurnRate() const { return this->properties->maxTurnRate(); }
 			float maxSpeed() const { return this->properties->maxSpeed(); }
 
-			kmint::play::actor& persuitTarget() const { return this->properties->persuitTarget(); };
+			kmint::play::actor& pursuitTarget() const { return this->properties->persuitTarget(); };
 			kmint::play::actor& fleeTarget() const { return this->properties->fleeTarget(); };
 
 			kmint::math::vector2d heading() const override { return _heading; }

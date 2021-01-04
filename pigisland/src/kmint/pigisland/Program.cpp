@@ -18,7 +18,7 @@ void Program::run() {
     kmint::pigisland::finitestate::BoatDockingScoreCard boatScoreCard;
     kmint::pigisland::shark& shark = stage.build_actor<kmint::pigisland::shark>(graph, kmint::pigisland::find_node_of_kind(graph, 'K'));
 
-    bool useGeneticAlgorithm = true;
+    bool useGeneticAlgorithm = false;
     kmint::pigisland::geneticalgorithm::GeneticScoreCard geneticScorecard;
     kmint::pigisland::geneticalgorithm::GeneticAlgorithm geneticAlgorithm{ stage, geneticScorecard };
 
@@ -41,7 +41,7 @@ void Program::run() {
     bool first = true;
     kmint::main_loop(stage, window, [&](kmint::delta_time dt, kmint::loop_controls& ctl) {
         if (first) {
-            ctl.time_scale *= 40.0;
+            ctl.time_scale *= 10.0;
             first = false;
         }
 

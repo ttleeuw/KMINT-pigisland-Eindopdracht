@@ -25,7 +25,7 @@ namespace kmint {
                 kmint::math::vector2d seek(kmint::math::vector2d& loc, MovingEntity& owner);
                 kmint::math::vector2d wander(kmint::math::vector2d& loc, MovingEntity& owner);
                 kmint::math::vector2d flee(kmint::math::vector2d& loc, MovingEntity& owner);
-                kmint::math::vector2d persuit(kmint::math::vector2d& loc, MovingEntity& owner);
+                kmint::math::vector2d pursuit(kmint::math::vector2d& loc, MovingEntity& owner);
 
                 kmint::math::vector2d pointToWorldSpace(const kmint::math::vector2d& point, const kmint::math::vector2d& agentHeading, const kmint::math::vector2d& agentSide, const kmint::math::vector2d& agentPosition);
 
