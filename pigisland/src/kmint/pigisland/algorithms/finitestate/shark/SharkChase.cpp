@@ -10,12 +10,12 @@ namespace kmint {
                 astar = std::make_unique<searchStrategy::AStarSearchStrategy>(entity.getGraph());
 
                 for (std::size_t i = 0; i < entity.num_perceived_actors(); ++i) {
-                    auto& a = entity.perceived_actor(i);
+                    auto& actor = entity.perceived_actor(i);
 
-                    if (!a.removed()) {
+                    if (!actor.removed()) {
                         map::map_node* node = &entity.getGraph()[0];
                         std::for_each(entity.getGraph().begin(), entity.getGraph().end(), [&](map::map_node& n) {
-                                if (math::distance(n.location(), a.location()) < math::distance(node->location(), a.location())) node = &n;
+                                if (math::distance(n.location(), actor.location()) < math::distance(node->location(), actor.location())) node = &n;
                             });
                         pathFinder.search(entity.node().node_id(), node->node_id(), astar.get());
                         this->path = astar->getShortestPath();
