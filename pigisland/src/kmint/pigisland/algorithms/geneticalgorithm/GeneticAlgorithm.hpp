@@ -60,7 +60,7 @@ namespace kmint
 					for (auto actor : alivePigs) { stage.remove_actor(*actor); }
 					alivePigs.clear();
 					auto locs = pigisland::random_pig_locations(100);
-					for (auto loc : locs) { pigs.push_back(stage.build_actor<pigisland::pig>(loc, boat, shark, Chromosome{})); }
+					for (auto loc : locs) { pigs.push_back(stage.build_actor<pigisland::pig>(loc, boat, shark, newGenChromosomes[rand() % newGenChromosomes.size()])); }
 
 					scorecard.resetChromosomes();
 				}
@@ -68,7 +68,7 @@ namespace kmint
 				void saveChromosomes(std::vector<play::actor*>& alivePigs) {
 					for (play::actor* actor : alivePigs) {
 						auto pig = dynamic_cast<kmint::pigisland::pig*>(actor);
-						if (pig->fitness >= 3) {
+						if (pig->fitness >= 5) {
 							scorecard.saveChromosome(pig->getChromosome());
 						}
 					}
