@@ -1,6 +1,6 @@
 #include "Program.hpp"
 
-int scale = 1;
+int scale = 20;
 
 void Program::runDefault() {
     auto map = kmint::pigisland::map();
@@ -83,7 +83,6 @@ void Program::runGenetic() {
     kmint::pigisland::finitestate::BoatDockingScoreCard boatScoreCard;
     kmint::pigisland::shark& shark = stage.build_actor<kmint::pigisland::shark>(graph, kmint::pigisland::find_node_of_kind(graph, 'K'));
 
-    bool useGeneticAlgorithm = false;
     kmint::pigisland::geneticalgorithm::GeneticScoreCard geneticScorecard;
     kmint::pigisland::geneticalgorithm::GeneticAlgorithm geneticAlgorithm{ stage, geneticScorecard };
 
@@ -135,7 +134,7 @@ void Program::runGenetic() {
 }
 
 void Program::run() {
-    bool useGenetic = true;
+    bool useGenetic = false;
     if (useGenetic) {
         this->runGenetic();
     }

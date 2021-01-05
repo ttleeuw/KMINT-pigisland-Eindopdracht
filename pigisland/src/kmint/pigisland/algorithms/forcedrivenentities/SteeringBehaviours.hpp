@@ -34,22 +34,6 @@ namespace kmint {
 
                 // Truncated
                 kmint::math::vector2d calculate(MovingEntity& owner);
-
-                // TODO implement
-                kmint::math::vector2d WTRSwPCalculate() { }
-                    // vector2d steeringForce
-                    // foreach(priorty in priority)
-                        // steeringForce += Wander() * wanderAmountWeight;
-                        // steeringForce += ObstacleAvoidance() * obstacleAvoidanceAmount
-                        // steeringForce += seperation() * seperationAmount;
-                    // return steeringForce.truncate(MAX_STEERING_FORCE);
-
-                // TODO implement
-                kmint::math::vector2d prioritizedDithering() {}
-                    // vector2d steeringForce
-                    // random on priority
-                    // 1 steeringforce adv random
-                    // return steeringForce.truncate(MAX_STEERING_FORCE);
             };
         }
     }

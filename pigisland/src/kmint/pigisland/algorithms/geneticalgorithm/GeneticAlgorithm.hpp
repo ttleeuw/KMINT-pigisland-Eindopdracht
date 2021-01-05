@@ -36,7 +36,6 @@ namespace kmint
 				}
 
 				void new_generation(shark& shark, boat& boat) {
-					// TODO fitness based on score
 					// Fitness
 					std::vector<Chromosome> newGenChromosomes;
 					for (Chromosome& chromosome : scorecard.getSavedChromosomes()) { newGenChromosomes.push_back(chromosome); }
