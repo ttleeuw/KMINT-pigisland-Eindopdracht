@@ -11,56 +11,64 @@ namespace kmint {
                 std::vector<Wall2D> walls;
 
                 // Screen borders
-                kmint::math::vector2d A{ 0, 548 };
-                kmint::math::vector2d B{ 0, 220 };
+                kmint::math::vector2d A{ 1024, 0 };
+                kmint::math::vector2d B{ 1024, 768 };
                 walls.emplace_back(A, B);
 
-                A = { 1024, 220 };
-                B = { 1024, 548 };
+                A = { 1024, 0 };
+                B = { 0, 0 };
                 walls.emplace_back(A, B);
 
-                A = { 768, 768 };
-                B = { 256, 768 };
+                A = { 0, 768 };
+                B = { 1024, 768 };
                 walls.emplace_back(A, B);
 
-                A = { 256, 0 };
+                A = { 0, 0 };
                 B = { 768, 0 };
                 walls.emplace_back(A, B);
 
                 //Island North-West
-                A = { 255, 549 };
-                B = { 0, 514 };
+                A = { 0, 87 };
+                B = { 157, 87 };
                 walls.emplace_back(A, B);
 
-                A = { 255, 768 };
-                B = { 255, 549 };
+                A = { 157, 0 };
+                B = { 157, 87 };
                 walls.emplace_back(A, B);
 
                 //Island North-East
-                A = { 1024, 549 };
-                B = { 769, 549 };
+                A = { 910, 0 };
+                B = { 910, 50 };
                 walls.emplace_back(A, B);
 
-                A = { 769, 549 };
-                B = { 769, 768 };
+                A = { 910, 50 };
+                B = { 1021, 50 };
                 walls.emplace_back(A, B);
 
                 //Island South-East
-                A = kmint::math::vector2d(769, 219);
-                B = kmint::math::vector2d(1024, 219);
+                A = { 820, 590 };
+                B = { 1021, 590 };
                 walls.emplace_back(A, B);
 
-                A = { 769, 0 };
-                B = { 769, 219 };
+                A = { 820, 764 };
+                B = { 820, 590 };
                 walls.emplace_back(A, B);
 
                 //Island South-west
-                A = { 0, 219 };
-                B = { 305, 219 };
+                A = { 60, 550 };
+                B = { 215, 550 };
                 walls.emplace_back(A, B);
 
-                A = { 305, 219 };
-                B = { 305, 0 };
+                A = { 60, 550 };
+                B = { 60, 700 };
+                walls.emplace_back(A, B);
+
+                A = { 60, 700 };
+                B = { 215, 700 };
+                walls.emplace_back(A, B);
+
+                A = { 215, 550 };
+                B = { 215, 700 };
                 walls.emplace_back(A, B);
 
                 return walls;

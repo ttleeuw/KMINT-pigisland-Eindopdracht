@@ -183,9 +183,9 @@ namespace kmint {
                     //if an intersection point has been detected, calculate a force that will direct the agent away
                     if (closestWall >= 0)
                     {
-                        //calculate by what distance the projected position of the agent will overshoot the wall
+                        // calculate by what distance the projected position of the agent will overshoot the wall
                         kmint::math::vector2d overShoot = m_Feelers[flr] - closestPoint;
-                        //create a force in the direction of the wall normal, with a magnitude of the overshoot
+                        // create a force in the direction of the wall normal, with a magnitude of the overshoot
                         steeringForce = walls[closestWall].normal() * kmint::pigisland::util::math::Util::calcVectorLength(overShoot);
                     }
                 }
