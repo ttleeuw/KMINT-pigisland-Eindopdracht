@@ -83,6 +83,7 @@ void Program::runGenetic() {
     kmint::pigisland::finitestate::BoatDockingScoreCard boatScoreCard;
     kmint::pigisland::shark& shark = stage.build_actor<kmint::pigisland::shark>(graph, kmint::pigisland::find_node_of_kind(graph, 'K'));
 
+    bool useGeneticAlgorithm = false;
     kmint::pigisland::geneticalgorithm::GeneticScoreCard geneticScorecard;
     kmint::pigisland::geneticalgorithm::GeneticAlgorithm geneticAlgorithm{ stage, geneticScorecard };
 

@@ -6,17 +6,17 @@ namespace kmint {
 	namespace pigisland {
 		class PigPropertiesDefault : public IProperties {
 		private:
-			kmint::play::actor& _persuitTarget;
+			kmint::play::actor& _pursuitTarget;
 			kmint::play::actor& _fleeTarget;
 		public:
-			PigPropertiesDefault(kmint::play::actor& boat, kmint::play::actor& shark) : _persuitTarget{ boat }, _fleeTarget{ shark } {}
+			PigPropertiesDefault(kmint::play::actor& boat, kmint::play::actor& shark) : _pursuitTarget{ boat }, _fleeTarget{ shark } {}
 
 			double wanderJitter() const override { return 16; };
 			double wanderRadius() const override { return 16; };
 			double wanderDistance() const override { return 16; };
 
 			double separationWeight() const override { return 1; };
-			double cohesionWeight() const override { return 0.5; };
+			double cohesionWeight() const override { return 0.02; };
 			double alignmentWeight() const override { return 0.1; };
 
 			double seekWeight() const override { return 1; }
@@ -31,7 +31,7 @@ namespace kmint {
 			float maxTurnRate() const override { return 5; };
 			float maxSpeed() const override { return 100; };
 
-			kmint::play::actor& persuitTarget() const override { return _persuitTarget; }
+			kmint::play::actor& persuitTarget() const override { return _pursuitTarget; }
 			kmint::play::actor& fleeTarget() const override { return _fleeTarget; }
 		};
 	}
