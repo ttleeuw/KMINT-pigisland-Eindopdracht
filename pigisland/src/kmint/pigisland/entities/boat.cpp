@@ -40,7 +40,7 @@ namespace kmint {
                 auto& actor = this->colliding_actor(i);
                 if (typeid(actor) == typeid(pig)) {
                     auto p = dynamic_cast<pig*>(&actor);
-                    if (geneticScoreCard) geneticScoreCard->saveChromosome(p->getChromosome());
+                    if (geneticScoreCard && p->safe) p->fitness += 5;
                     actor.remove();
                 }
             }

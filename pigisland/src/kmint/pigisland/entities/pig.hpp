@@ -18,6 +18,9 @@ namespace kmint {
 
 			void act(delta_time dt) override;
 			geneticalgorithm::Chromosome& getChromosome() { return chromosome; }
+
+			int fitness = 0;
+			bool safe = false;
 		};
 	} 
 } 

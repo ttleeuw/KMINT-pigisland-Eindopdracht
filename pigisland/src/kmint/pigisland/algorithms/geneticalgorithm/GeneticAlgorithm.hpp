@@ -45,10 +45,14 @@ namespace kmint
 					std::vector<play::actor*> alivePigs{};
 					for (play::actor& actor : stage)
 					{
-						if (typeid(actor) == typeid(pig))
+						if (typeid(actor) == typeid(pig)) {
+							auto p = dynamic_cast<pig*>(&actor);
+							p->fitness += 3;
 							alivePigs.push_back(&actor);
+						}
 					}
 
+					saveChromosomes(alivePigs);
 					crossOver(scorecard.getSavedChromosomes(), alivePigs, newGenChromosomes);
 					mutate(newGenChromosomes);
 
@@ -59,6 +63,15 @@ namespace kmint
 					for (auto loc : locs) { pigs.push_back(stage.build_actor<pigisland::pig>(loc, boat, shark, Chromosome{})); }
 
 					scorecard.resetChromosomes();
+				}
+
+				void saveChromosomes(std::vector<play::actor*>& alivePigs) {
+					for (play::actor* actor : alivePigs) {
+						auto pig = dynamic_cast<kmint::pigisland::pig*>(actor);
+						if (pig->fitness >= 3) {
+							scorecard.saveChromosome(pig->getChromosome());
+						}
+					}
 				}
 
 				void crossOver(std::vector<Chromosome>& fittest, std::vector<play::actor*>& alivePigs, std::vector<Chromosome>& newGenChromosomes) {

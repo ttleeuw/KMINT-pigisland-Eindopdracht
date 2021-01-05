@@ -59,6 +59,8 @@ namespace kmint {
             {
                 auto& actor = this->colliding_actor(i);
                 if (typeid(actor) == typeid(pig)) {
+                    auto p = dynamic_cast<pig*>(&actor);
+                    p->fitness += 1;
                     actor.remove();
                 }
             }
