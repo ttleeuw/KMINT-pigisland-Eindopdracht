@@ -228,7 +228,7 @@ namespace kmint {
             // Truncated
             kmint::math::vector2d SteeringBehaviours::calculate(MovingEntity& owner) {
                 math::vector2d steeringForce;
-                //steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
+                steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
                 steeringForce += flee(owner.fleeTarget().location(), owner) * owner.fleeWeight();
                 steeringForce += pursuit(owner.pursuitTarget().location(), owner) * owner.seekWeight();
                 steeringForce += wallAvoidance(owner) * owner.obstacleAvoidanceWeight();
@@ -237,7 +237,7 @@ namespace kmint {
                 steeringForce += alignment(owner) * owner.alignmentWeight();
 
                 //return steeringForce;
-                return kmint::pigisland::util::math::Util::truncate(steeringForce, owner.maxTurnRate());
+                return kmint::pigisland::util::math::Util::truncate(steeringForce, owner.maxSpeed());
             }
         }
     }

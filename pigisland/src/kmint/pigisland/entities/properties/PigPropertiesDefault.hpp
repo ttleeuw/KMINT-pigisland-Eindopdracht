@@ -16,7 +16,7 @@ namespace kmint {
 			double wanderDistance() const override { return 16; };
 
 			double separationWeight() const override { return 1; };
-			double cohesionWeight() const override { return 0.2; };
+			double cohesionWeight() const override { return 0.02; };
 			double alignmentWeight() const override { return 0.1; };
 
 			double seekWeight() const override { return 1; }
