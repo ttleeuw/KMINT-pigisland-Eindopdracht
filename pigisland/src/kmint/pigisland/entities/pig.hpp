@@ -21,6 +21,10 @@ namespace kmint {
 
 			int fitness = 0;
 			bool safe = false;
+
+			bool operator< (const pig& other) const {
+				return fitness < other.fitness;
+			}
 		};
 	} 
 } 

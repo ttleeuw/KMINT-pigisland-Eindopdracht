@@ -1,6 +1,6 @@
 #include "Program.hpp"
 
-int scale = 20;
+int scale = 10;
 
 void Program::runDefault() {
     auto map = kmint::pigisland::map();
@@ -134,7 +134,7 @@ void Program::runGenetic() {
 }
 
 void Program::run() {
-    bool useGenetic = false;
+    bool useGenetic = true;
     if (useGenetic) {
         this->runGenetic();
     }

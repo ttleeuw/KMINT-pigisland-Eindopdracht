@@ -65,9 +65,16 @@ namespace kmint
 				}
 
 				void saveChromosomes(std::vector<play::actor*>& alivePigs) {
+
+					std::sort(alivePigs.begin(), alivePigs.end());
+					int maxFitness = 0;
+
+					if (alivePigs.size() > 0)
+						maxFitness = dynamic_cast<kmint::pigisland::pig*>(alivePigs[0])->fitness;
+
 					for (play::actor* actor : alivePigs) {
 						auto pig = dynamic_cast<kmint::pigisland::pig*>(actor);
-						if (pig->fitness >= 5) {
+						if (rand() % maxFitness <= pig->fitness) {
 							scorecard.saveChromosome(pig->getChromosome());
 						}
 					}
