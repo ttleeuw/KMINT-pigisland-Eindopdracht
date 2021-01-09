@@ -27,6 +27,7 @@ namespace kmint {
 
 			std::vector<Wall2D> getWalls() { return this->walls; };
 
+			virtual std::vector<std::reference_wrapper<MovingEntity>> getNeighbours(MovingEntity& owner) = 0;
 			virtual void act(delta_time dt) override = 0;
 
 			kmint::math::vector2d getVelocity() { return this->velocity; }

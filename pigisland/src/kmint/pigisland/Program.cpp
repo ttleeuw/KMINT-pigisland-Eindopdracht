@@ -1,6 +1,52 @@
 #include "Program.hpp"
+#include <kmint/pigisland/util/DrawableWall.hpp>
 
-int scale = 1;
+int scale = 2;
+
+void drawWalls(kmint::pigisland::pig& pig, kmint::play::stage& stage) {
+    std::vector<std::reference_wrapper<kmint::pigisland::DrawableWall>> drawables;
+    auto walls = pig.getWalls();
+
+    for (auto w : walls) {
+        if (w.from().x() == w.to().x()) {
+            // Draw over y-axis
+            auto dist = w.from().y() - w.to().y();
+
+            if (w.from().y() < w.to().y()) {
+                for (size_t i = 0; i < dist; i++)
+                {
+                    kmint::math::vector2d loc = { w.from().x(), w.from().y() + i };
+                    drawables.push_back(stage.build_actor<kmint::pigisland::DrawableWall>(loc));
+                }
+            }
+            else {
+                for (size_t i = 0; i < dist; i++)
+                {
+                    kmint::math::vector2d loc = { w.from().x(), w.from().y() + i };
+                    drawables.push_back(stage.build_actor<kmint::pigisland::DrawableWall>(loc));
+                }
+            }
+        }
+        else {
+            // Draw over x-axis
+            auto dist = w.from().x() - w.to().x();
+            if (w.from().x() < w.to().x()) {
+                for (size_t i = 0; i < dist; i++)
+                {
+                    kmint::math::vector2d loc = { w.from().x() - i , w.from().y() };
+                    drawables.push_back(stage.build_actor<kmint::pigisland::DrawableWall>(loc));
+                }
+            }
+            else {
+                for (size_t i = 0; i < dist; i++)
+                {
+                    kmint::math::vector2d loc = { w.from().x() + i , w.from().y() };
+                    drawables.push_back(stage.build_actor<kmint::pigisland::DrawableWall>(loc));
+                }
+            }
+        }
+    }
+}
 
 void Program::runDefault() {
     auto map = kmint::pigisland::map();
@@ -80,14 +126,13 @@ void Program::runGenetic() {
     stage.build_actor<kmint::play::background>(kmint::math::size(1024, 768), kmint::graphics::image{ map.background_image() });
     stage.build_actor<kmint::play::map_actor>(kmint::math::vector2d{ 0.f, 0.f }, map.graph());
 
-    kmint::pigisland::finitestate::BoatDockingScoreCard boatScoreCard;
-    kmint::pigisland::shark& shark = stage.build_actor<kmint::pigisland::shark>(graph, kmint::pigisland::find_node_of_kind(graph, 'K'));
 
-    bool useGeneticAlgorithm = false;
     kmint::pigisland::geneticalgorithm::GeneticScoreCard geneticScorecard;
     kmint::pigisland::geneticalgorithm::GeneticAlgorithm geneticAlgorithm{ stage, geneticScorecard };
 
+    kmint::pigisland::finitestate::BoatDockingScoreCard boatScoreCard;
     kmint::pigisland::boat& boat = stage.build_actor<kmint::pigisland::boat>(graph, kmint::pigisland::find_node_of_kind(graph, '1'), boatScoreCard, geneticScorecard);
+    kmint::pigisland::shark& shark = stage.build_actor<kmint::pigisland::shark>(graph, kmint::pigisland::find_node_of_kind(graph, 'K'), geneticScorecard);
 
     std::vector<kmint::pigisland::pig*> pigs;
 
@@ -95,7 +140,8 @@ void Program::runGenetic() {
     // Maak een event_source aan (hieruit kun je alle events halen, zoals toetsaanslagen)
     kmint::ui::events::event_source event_source{};
 
-    bool first = true;
+    //drawWalls(geneticAlgorithm.getPigs()[0], stage);
+    bool first = false;
     kmint::main_loop(stage, window, [&](kmint::delta_time dt, kmint::loop_controls& ctl) {
         if (first) {
             ctl.time_scale *= scale;

@@ -8,31 +8,17 @@
 namespace kmint {
     namespace pigisland {
         namespace forcedrivenentities {
-            std::vector<std::reference_wrapper<MovingEntity>> SteeringBehaviours::getNeighbours(MovingEntity& owner) {
-                std::vector<std::reference_wrapper<MovingEntity>> returnVector;
-                for (std::size_t i = 0; i < owner.num_perceived_actors(); ++i)
-                {
-                    auto& actor = owner.perceived_actor(i);
-                    if (typeid(actor) == typeid(pig)) {
-                        auto p = dynamic_cast<MovingEntity*>(&actor);
-                        returnVector.push_back(*p);
-                    }
-                }
-                return returnVector;
-            }
-
             kmint::math::vector2d SteeringBehaviours::cohesion(MovingEntity& owner) {
                 kmint::math::vector2d centerOfMass, steeringForce;
 
-                auto neighbours = getNeighbours(owner);
-
-                for (std::size_t i = 0; i < neighbours.size(); i++)
-                {
-                    centerOfMass += neighbours[i].get().location();
-                }
+                auto neighbours = owner.getNeighbours(owner);
 
                 if (neighbours.size() > 0)
                 {
+                    for (std::size_t i = 0; i < neighbours.size(); i++)
+                    {
+                        centerOfMass += neighbours[i].get().location();
+                    }
                     centerOfMass /= neighbours.size();
                     steeringForce = seek(centerOfMass, owner);
                 }
@@ -42,7 +28,7 @@ namespace kmint {
             kmint::math::vector2d SteeringBehaviours::separation(MovingEntity& owner) {
                 kmint::math::vector2d steeringForce;
 
-                auto neighbours = getNeighbours(owner);
+                auto neighbours = owner.getNeighbours(owner);
                 for (std::size_t i = 0; i < neighbours.size(); i++)
                 {
                     kmint::math::vector2d to = owner.location() - neighbours[i].get().location();
@@ -54,15 +40,14 @@ namespace kmint {
             kmint::math::vector2d SteeringBehaviours::alignment(MovingEntity& owner) {
 
                 kmint::math::vector2d avarage;
-                auto neighbours = getNeighbours(owner);
-
-                for (std::size_t i = 0; i < neighbours.size(); i++)
-                {
-                    avarage += neighbours[i].get().heading();
-                }
+                auto neighbours = owner.getNeighbours(owner);
 
                 if (neighbours.size() > 0)
                 {
+                    for (std::size_t i = 0; i < neighbours.size(); i++)
+                    {
+                        avarage += neighbours[i].get().heading();
+                    }
                     avarage /= neighbours.size();
                     avarage -= owner.heading();
                 }
@@ -146,7 +131,7 @@ namespace kmint {
                 auto newV = kmint::pigisland::util::math::Util::multiply(kmint::pigisland::util::math::Util::multiply(kmint::pigisland::util::math::Util::multiply(m1, m2), m3), f);
                 auto newM = kmint::pigisland::util::math::Util::multiply(m3, m2);
                 auto Mr = kmint::pigisland::util::math::Util::multiply(m3, newM);
-                
+
                 auto r = kmint::pigisland::util::math::Util::multiply(Mr, f);
                 return newV;
             }
@@ -163,14 +148,14 @@ namespace kmint {
 
                 //examine each feeler in turn
                 std::vector<Wall2D> walls = owner.getWalls();
-                for (unsigned int flr = 0; flr < m_Feelers.size(); ++flr)
+                for (std::size_t flr = 0; flr < m_Feelers.size(); ++flr)
                 {
-                    //run through each wall checking for any intersection points
-                    for (unsigned int w = 0; w < walls.size(); ++w)
+                    for (std::size_t w = 0; w < walls.size(); ++w)
                     {
+                        // Check wheter feeleter insects
                         if (kmint::pigisland::util::math::Util::lineIntersection2D(owner.location(), m_Feelers[flr],  walls[w].from(), walls[w].to(), distToThisIP, point))
                         {
-                            //is this the closest found so far? If so keep a record
+                            // 
                             if (distToThisIP < distToClosestIP)
                             {
                                 distToClosestIP = distToThisIP;
@@ -225,19 +210,36 @@ namespace kmint {
                 m_Feelers[2] = owner.location() + owner.wallDetectionFeelerLength() / 2.0f * temp;
             }
 
+            bool accumulateForece(MovingEntity& owner, kmint::math::vector2d& runningTot, const kmint::math::vector2d forceToAdd) {
+                double magSoFar = kmint::pigisland::util::math::Util::calcVectorLength(runningTot);
+
+                double magRemaining = owner.maxForce() - magSoFar;
+
+                if (magRemaining <= 0) return false;
+
+                double magToAdd = kmint::pigisland::util::math::Util::calcVectorLength(forceToAdd);
+
+                if (magToAdd < magRemaining) {
+                    runningTot += forceToAdd;
+                }
+                else {
+                    runningTot  += normalize(forceToAdd) * magRemaining;
+                }
+                return true;
+            }
+
             // Truncated
             kmint::math::vector2d SteeringBehaviours::calculate(MovingEntity& owner) {
                 math::vector2d steeringForce;
+                steeringForce += wallAvoidance(owner) * owner.obstacleAvoidanceWeight();
                 steeringForce += wander(owner.location(), owner) * owner.wanderWeight();
                 steeringForce += flee(owner.fleeTarget().location(), owner) * owner.fleeWeight();
                 steeringForce += pursuit(owner.pursuitTarget().location(), owner) * owner.seekWeight();
-                steeringForce += wallAvoidance(owner) * owner.obstacleAvoidanceWeight();
-                steeringForce += cohesion(owner) * owner.cohesionWeight();
                 steeringForce += separation(owner) * owner.separationWeight();
+                steeringForce += cohesion(owner) * owner.cohesionWeight();
                 steeringForce += alignment(owner) * owner.alignmentWeight();
 
-                //return steeringForce;
-                return kmint::pigisland::util::math::Util::truncate(steeringForce, owner.maxSpeed());
+                return kmint::pigisland::util::math::Util::truncate(steeringForce, owner.maxForce());
             }
         }
     }

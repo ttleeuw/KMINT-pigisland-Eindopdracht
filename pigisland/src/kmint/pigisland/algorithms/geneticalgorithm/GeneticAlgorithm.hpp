@@ -1,3 +1,4 @@
+
 #pragma once
 #include <vector>
 #include <filesystem>
@@ -26,92 +27,14 @@ namespace kmint
 				play::stage& stage;
 				GeneticScoreCard& scorecard;
 			public:
-				GeneticAlgorithm(play::stage& s, GeneticScoreCard& sc) : stage(s), scorecard(sc) { }
+				std::vector<std::reference_wrapper<pig>>& getPigs() { return this->pigs; };
+				GeneticAlgorithm(play::stage& s, GeneticScoreCard& sc);
 
-				void create_generation_0(shark& shark, boat& boat)
-				{
-					std::vector<pig*> m;
-					auto locs = pigisland::random_pig_locations(100);
-					for (auto loc : locs) { pigs.push_back(stage.build_actor<pigisland::pig>(loc, boat, shark, Chromosome{})); }
-				}
-
-				void new_generation(shark& shark, boat& boat) {
-					// TODO fitness based on score
-					// Fitness
-					std::vector<Chromosome> newGenChromosomes;
-					for (Chromosome& chromosome : scorecard.getSavedChromosomes()) { newGenChromosomes.push_back(chromosome); }
-
-					// Initialize new population
-					std::vector<play::actor*> alivePigs{};
-					for (play::actor& actor : stage)
-					{
-						if (typeid(actor) == typeid(pig))
-							alivePigs.push_back(&actor);
-					}
-
-					crossOver(scorecard.getSavedChromosomes(), alivePigs, newGenChromosomes);
-					mutate(newGenChromosomes);
-
-					// Repopulate
-					for (auto actor : alivePigs) { stage.remove_actor(*actor); }
-					alivePigs.clear();
-					auto locs = pigisland::random_pig_locations(100);
-					for (auto loc : locs) { pigs.push_back(stage.build_actor<pigisland::pig>(loc, boat, shark, Chromosome{})); }
-
-					scorecard.resetChromosomes();
-				}
-
-				void crossOver(std::vector<Chromosome>& fittest, std::vector<play::actor*>& alivePigs, std::vector<Chromosome>& newGenChromosomes) {
-					const int number_of_pigs_to_generate = 100 - fittest.size();
-					// Crossover
-					for (int i = 0; i < number_of_pigs_to_generate; ++i)
-					{
-						Chromosome firstParent;
-
-						if (!fittest.empty())
-						{
-							firstParent = fittest[random_int(0, fittest.size())];
-						}
-						else
-						{
-							firstParent = dynamic_cast<pigisland::pig*>(alivePigs[random_int(0, alivePigs.size())])->getChromosome();
-						}
-
-						Chromosome secondParent;
-						if (!alivePigs.empty())
-						{
-							secondParent = dynamic_cast<pigisland::pig*>(alivePigs[random_int(0, alivePigs.size())])->getChromosome();
-						}
-						else
-						{
-							secondParent = fittest[random_int(0, fittest.size())];
-						}
-
-						const int splicePoint = random_int(1, 4);
-						Chromosome child;
-
-						for (int a = 0; a < splicePoint; ++a)
-						{
-							child.get()[a] = firstParent.get()[a];
-						}
-						for (int b = splicePoint; b < secondParent.get().size(); ++b)
-						{
-							child.get()[b] = secondParent.get()[b];
-						}
-
-						newGenChromosomes.push_back(child);
-					}
-				}
-
-				void mutate(std::vector<Chromosome>& newGenChromosomes) {
-					if (random_int(0, 1000) == 190)
-					{
-						const int randomGene = random_int(0, 5);
-						// Check wheter scalar can be < 0 
-						randomGene <= 1 ? newGenChromosomes.at(random_int(0, 100)).get().at(randomGene) = random_scalar(-1.0f, 1.0f) :
-							newGenChromosomes.at(random_int(0, 100)).get().at(randomGene) = random_scalar(0.0f, 1.0f);
-					}
-				}
+				std::vector<std::reference_wrapper<Chromosome>> getRandomBasedOnFitness(std::map<int, std::vector<std::reference_wrapper<Chromosome>>>& oldgen);
+				void create_generation_0(shark& shark, boat& boat);
+				void new_generation(shark& shark, boat& boat);
+				void crossOver(std::map<int, std::vector<std::reference_wrapper<Chromosome>>> newgen, std::vector<Chromosome>& newGenChromosomes);
+				void mutate(std::vector<Chromosome>& newGenChromosomes);
 			};
 		}
 	}

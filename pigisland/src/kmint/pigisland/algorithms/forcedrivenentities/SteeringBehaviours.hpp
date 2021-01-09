@@ -17,7 +17,6 @@ namespace kmint {
                 math::vector2d wanderTarget;
                 std::vector<kmint::math::vector2d> m_Feelers{ 3 };
             public:
-                std::vector<std::reference_wrapper<MovingEntity>> getNeighbours(MovingEntity& owner);
                 kmint::math::vector2d cohesion(MovingEntity& owner);
                 kmint::math::vector2d separation(MovingEntity& owner);
                 kmint::math::vector2d alignment(MovingEntity& owner);
@@ -34,22 +33,6 @@ namespace kmint {
 
                 // Truncated
                 kmint::math::vector2d calculate(MovingEntity& owner);
-
-                // TODO implement
-                kmint::math::vector2d WTRSwPCalculate() { }
-                    // vector2d steeringForce
-                    // foreach(priorty in priority)
-                        // steeringForce += Wander() * wanderAmountWeight;
-                        // steeringForce += ObstacleAvoidance() * obstacleAvoidanceAmount
-                        // steeringForce += seperation() * seperationAmount;
-                    // return steeringForce.truncate(MAX_STEERING_FORCE);
-
-                // TODO implement
-                kmint::math::vector2d prioritizedDithering() {}
-                    // vector2d steeringForce
-                    // random on priority
-                    // 1 steeringforce adv random
-                    // return steeringForce.truncate(MAX_STEERING_FORCE);
             };
         }
     }

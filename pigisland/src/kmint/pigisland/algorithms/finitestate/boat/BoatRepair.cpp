@@ -18,7 +18,6 @@ namespace kmint {
             void BoatRepair::execute(boat& entity) {
                 if (!path.empty() && entity.waitIfNecessary()) {
                     entity.moveWithPath(path);
-                    entity.savePig();
                 }
                 else if (path.empty()) {
                     entity.getStateMachine().changeState(std::make_unique<BoatWander>(), entity);

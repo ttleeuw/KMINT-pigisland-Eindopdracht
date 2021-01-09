@@ -29,6 +29,18 @@ namespace kmint {
             prop->setAlignmentWeight(chromosome.get()[4]);
         }
 
+        std::vector<std::reference_wrapper<MovingEntity>> pig::getNeighbours(MovingEntity& owner) {
+            std::vector<std::reference_wrapper<MovingEntity>> returnVector;
+            for (std::size_t i = 0; i < owner.num_perceived_actors(); ++i)
+            {
+                auto& actor = owner.perceived_actor(i);
+                if (typeid(actor) == typeid(pig)) {
+                    auto p = dynamic_cast<MovingEntity*>(&actor);
+                    returnVector.push_back(*p);
+                }
+            }
+            return returnVector;
+        }
 
         void pig::act(delta_time dt) {
             t_passed_ += dt;
@@ -40,7 +52,7 @@ namespace kmint {
                 velocity += acceleration * to_seconds(dt);
                 velocity = kmint::pigisland::util::math::Util::truncate(velocity, maxSpeed());
                 //update the position
-                location(location() + (velocity * to_seconds(dt)));
+                location(location() + velocity);
                 //update the heading if the vehicle has a non zero velocity
                 if (kmint::pigisland::util::math::Util::calcVectorLength(velocity) > 0.00000001)
                 {

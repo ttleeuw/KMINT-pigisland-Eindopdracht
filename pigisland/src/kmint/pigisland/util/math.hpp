@@ -18,7 +18,6 @@ namespace kmint {
                         if (length > max)
                         {
                             auto result = pigisland::util::math::Util::normalize(vector);
-
                             return result *= max;
                         }
                         return vector;
@@ -98,7 +97,6 @@ namespace kmint {
 
                     static bool lineIntersection2D(kmint::math::vector2d A, kmint::math::vector2d B, kmint::math::vector2d C, kmint::math::vector2d D, double& dist, kmint::math::vector2d& point)
                     {
-
                         double rTop = (A.y() - C.y()) * (D.x() - C.x()) - (A.x() - C.x()) * (D.y() - C.y());
                         double rBot = (B.x() - A.x()) * (D.y() - C.y()) - (B.y() - A.y()) * (D.x() - C.x());
 
