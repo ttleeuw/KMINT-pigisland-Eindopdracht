@@ -23,12 +23,12 @@ namespace kmint {
 			double wanderWeight() const override { return 1; }
 			double fleeWeight() const override { return 1; }
 
-			double wallDetectionFeelerLength() const override { return 32; };
-			double obstacleAvoidanceWeight() const override { return 10; };
+			double wallDetectionFeelerLength() const override { return 64; };
+			double obstacleAvoidanceWeight() const override { return 15; };
 
 			float mass() const override { return 5; };
-			float maxForce() const override { return 20; };
-			float maxTurnRate() const override { return 20; };
+			float maxForce() const override { return 25; };
+			float maxTurnRate() const override { return 10; };
 			float maxSpeed() const override { return 25; };
 
 			kmint::play::actor& persuitTarget() const override { return _pursuitTarget; }

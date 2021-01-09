@@ -181,7 +181,7 @@ void Program::runGenetic() {
 }
 
 void Program::run() {
-    bool useGenetic = false;
+    bool useGenetic = true;
     if (useGenetic) {
         this->runGenetic();
     }

@@ -37,11 +37,11 @@ namespace kmint {
 			void setSeekWeight(double seekWeight) { _seekWeight = seekWeight; };
 			void setFleeWeight(double fleeWeight) { _fleeWeight = fleeWeight; };
 
-			double wallDetectionFeelerLength() const override { return 32; };
-			double obstacleAvoidanceWeight() const override { return 10; };
+			double wallDetectionFeelerLength() const override { return 64; };
+			double obstacleAvoidanceWeight() const override { return 15; };
 
 			float mass() const override { return 5; };
-			float maxForce() const override { return 50; };
+			float maxForce() const override { return 20; };
 			float maxTurnRate() const override { return 20; };
 			float maxSpeed() const override { return 25; };
 
