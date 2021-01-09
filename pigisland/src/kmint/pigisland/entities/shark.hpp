@@ -8,13 +8,15 @@
 #include "kmint/pigisland/algorithms/finitestate/StateMachine.hpp"
 #include "kmint/pigisland/algorithms/finitestate/shark/SharkWander.hpp"
 #include "kmint/pigisland/algorithms/finitestate/shark/SharkGlobalState.hpp"
+#include "kmint/pigisland/algorithms/geneticalgorithm/GeneticScoreCard.hpp"
 
 namespace kmint {
 	namespace pigisland {
 		class shark : public MapActor {
 		public:
 			shark(map::map_graph& g, map::map_node& initial_node);
-
+			shark(map::map_graph& g, map::map_node& initial_node, geneticalgorithm::GeneticScoreCard& _geneticScoreCard);
+			
 			void act(delta_time dt) override;
 
 			bool perceptive() const override { return true; }
@@ -28,6 +30,7 @@ namespace kmint {
 			void eatPig();
 			void reset() override;
 		private:
+			geneticalgorithm::GeneticScoreCard* geneticScoreCard = nullptr;
 			finitestate::StateMachine<shark> stateMachine;
 			bool resting = false;
 		};

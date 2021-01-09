@@ -14,6 +14,12 @@ namespace kmint {
             this->stateMachine.setCurrentState(std::make_unique<finitestate::SharkWander>(), *this);
             this->stateMachine.setGlobalState(std::make_unique<finitestate::SharkGlobalState>(), *this);
         }
+        shark::shark(map::map_graph& g, map::map_node& initial_node, geneticalgorithm::GeneticScoreCard& _geneticScoreCard)
+            : MapActor{ g, initial_node, *this, graphics::image{shark_image()} }, geneticScoreCard{ &_geneticScoreCard }
+        {
+            this->stateMachine.setCurrentState(std::make_unique<finitestate::SharkWander>(), *this);
+            this->stateMachine.setGlobalState(std::make_unique<finitestate::SharkGlobalState>(), *this);
+        }
 
         void shark::act(delta_time dt) {
             t_passed_ += dt;
@@ -60,7 +66,7 @@ namespace kmint {
                 auto& actor = this->colliding_actor(i);
                 if (typeid(actor) == typeid(pig)) {
                     auto p = dynamic_cast<pig*>(&actor);
-                    p->fitness += 1;
+                    if (geneticScoreCard) geneticScoreCard->saveLeastFittestChromosome(p->getChromosome());
                     actor.remove();
                 }
             }

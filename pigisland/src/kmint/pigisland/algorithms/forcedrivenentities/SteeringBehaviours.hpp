@@ -17,7 +17,6 @@ namespace kmint {
                 math::vector2d wanderTarget;
                 std::vector<kmint::math::vector2d> m_Feelers{ 3 };
             public:
-                std::vector<std::reference_wrapper<MovingEntity>> getNeighbours(MovingEntity& owner);
                 kmint::math::vector2d cohesion(MovingEntity& owner);
                 kmint::math::vector2d separation(MovingEntity& owner);
                 kmint::math::vector2d alignment(MovingEntity& owner);

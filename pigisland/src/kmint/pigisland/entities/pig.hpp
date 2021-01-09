@@ -16,15 +16,9 @@ namespace kmint {
 			pig::pig(math::vector2d location, boat& boat, shark& shark);
 			pig::pig(math::vector2d location, boat& boat, shark& shark, geneticalgorithm::Chromosome chromosome);
 
+			std::vector<std::reference_wrapper<MovingEntity>> getNeighbours(MovingEntity& owner) override;
 			void act(delta_time dt) override;
 			geneticalgorithm::Chromosome& getChromosome() { return chromosome; }
-
-			int fitness = 0;
-			bool safe = false;
-
-			bool operator< (const pig& other) const {
-				return fitness < other.fitness;
-			}
 		};
 	} 
 } 

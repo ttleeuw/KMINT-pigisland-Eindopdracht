@@ -3,7 +3,6 @@
 
 namespace kmint {
     namespace pigisland {
-
         class Wall2D
         {
         protected:
@@ -24,39 +23,27 @@ namespace kmint {
                 return target;
             }
 
-            kmint::math::vector2d m_vA;
-            kmint::math::vector2d m_vB;
-            kmint::math::vector2d m_vN;
+            kmint::math::vector2d _from;
+            kmint::math::vector2d _to;
+            kmint::math::vector2d _normal;
 
             void calculateNormal()
             {
-                kmint::math::vector2d temp = normalize(m_vB - m_vA);
-
-                m_vN = { -temp.y(), temp.x() };
+                kmint::math::vector2d temp = normalize(_to - _from);
+                _normal = { -temp.y(), temp.x() };
             }
 
         public:
 
-            Wall2D() {}
-            Wall2D(kmint::math::vector2d A, kmint::math::vector2d B) :m_vA(A), m_vB(B)
+            Wall2D(kmint::math::vector2d from, kmint::math::vector2d to) :_from(from), _to(to)
             {
                 calculateNormal();
             }
 
-            Wall2D(kmint::math::vector2d A, kmint::math::vector2d B, kmint::math::vector2d N) :m_vA(A), m_vB(B), m_vN(N)
-            {
-            }
+            kmint::math::vector2d from()const { return _from; }
+            kmint::math::vector2d to()const { return _to; }
 
-            kmint::math::vector2d from()const { return m_vA; }
-            void setFrom(kmint::math::vector2d v) { m_vA = v; calculateNormal(); }
-
-            kmint::math::vector2d to()const { return m_vB; }
-            void setTo(kmint::math::vector2d v) { m_vB = v; calculateNormal(); }
-
-            kmint::math::vector2d normal()const { return m_vN; }
-            void setNormal(kmint::math::vector2d n) { m_vN = n; }
-
-            kmint::math::vector2d center() const { return (m_vA + m_vB) / 2.0; }
+            kmint::math::vector2d normal()const { return _normal; }
         };
     }
 }

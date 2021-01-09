@@ -15,6 +15,7 @@ namespace searchStrategy {
     std::queue<int> AStarSearchStrategy::getShortestPath() const { return shortestPath; }
     double AStarSearchStrategy::getCost() const { return _realCosts[_target]; }
 
+    // Eucliedian distance
     double AStarSearchStrategy::calculateHeuristicCosts(const edge* edge, int target) {
         auto dx = edge->to().location().x() - _graph[target].location().x();
         auto dy = edge->to().location().y() - _graph[target].location().y();
@@ -31,10 +32,9 @@ namespace searchStrategy {
             int nextClosestNode = priorityQueue.pop();
             _graph[nextClosestNode].tag(kmint::graph::node_tag::visited);
             _shortestPathTree[nextClosestNode] = _searchFrontier[nextClosestNode];
-
+            // at the target position
             if (nextClosestNode == _target) break;
-
-            
+            // Loop over the edges
             for (std::size_t i = 0; i < _graph[nextClosestNode].num_edges(); ++i) {
                 auto edge = &_graph[nextClosestNode][i];
                 if (edge->to().tagged()) continue;
@@ -42,8 +42,8 @@ namespace searchStrategy {
                 double heuristicCost = calculateHeuristicCosts(edge, _target);
                 double calculatedRealCost = _realCosts[nextClosestNode] + edge->weight();
 
-                //if the node has not been added to the frontier, add it and update the G and F costs
                 auto nodeId = edge->to().node_id();
+                // Node hasnt been added
                 if (_searchFrontier[nodeId] == NULL)
                 {
                     _estimatedCosts[nodeId] = calculatedRealCost + heuristicCost;
@@ -51,7 +51,7 @@ namespace searchStrategy {
                     priorityQueue.insert(nodeId, calculatedRealCost + heuristicCost);
                     _searchFrontier[nodeId] = edge;
                 }
-                //if this node is already on the frontier but the cost to get here is cheaper than has been found previously, update the node costs and frontier accordingly.
+                // Cheaper to get here than previously found
                 else if ((calculatedRealCost < _realCosts[nodeId]) && (_shortestPathTree[nodeId] == NULL))
                 {
                     _estimatedCosts[nodeId] = calculatedRealCost + heuristicCost;
@@ -61,27 +61,23 @@ namespace searchStrategy {
             }
         }
 
+        // Traceback
         std::queue<int> path;
 
         if (_target < 0) {
             shortestPath = path;
             return;
         }
-
+        std::vector<int> stack;
         int current = _target;
-        path.push(current);
+        stack.push_back(current);
         while ((current != _source) && (_shortestPathTree[current] != 0))
         {
             _graph[current].tag(kmint::graph::node_tag::path);
             current = _shortestPathTree[current]->from().node_id();
-            path.push(current);
+            stack.push_back(current);
         }
 
-        std::vector<int> stack;
-        while (!path.empty()) {
-            stack.push_back(path.front());
-            path.pop();
-        }
         while (!stack.empty()) {
             path.push(stack.back());
             stack.pop_back();
